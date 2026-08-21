@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="AddPack.Business/AddPack.Business.csproj" />
+  <Project Path="AddPack.DataAccess/AddPack.DataAccess.csproj" />
+  <Project Path="AddPack.Models/AddPack.Models.csproj" />
+  <Project Path="AddPack.Utility/AddPack.Utility.csproj" />
+  <Project Path="AddPack.Web/AddPack.Web.csproj" />
+</Solution>
