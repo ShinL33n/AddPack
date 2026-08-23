@@ -29,3 +29,104 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* ==========================================================================
+   AddPack - global styles
+   ========================================================================== */
+
+:root {
+    --ap-green-dark: #424E22;
+    --ap-green: #566628;
+    --ap-olive-light: #C0BE50;
+    --ap-olive: #737D31;
+    --ap-khaki: #A09D65;
+    --ap-cream: #F7F6F1;
+}
+
+/* Przycisk w kolorze marki - używany w stopce (newsletter), na kartach
+   produktów ("Dodaj do koszyka") i pewnie gdzie indziej. */
+.btn-ap-primary {
+    background-color: var(--ap-green);
+    border-color: var(--ap-green);
+    color: #fff;
+}
+
+.btn-ap-primary:hover {
+    background-color: var(--ap-green-dark);
+    border-color: var(--ap-green-dark);
+    color: #fff;
+}
+
+/* Badge w kolorze marki - licznik koszyka w navbarze, ale też np. etykieta
+   "DEMO" / "Nowość" na kartach produktów. */
+.badge-ap {
+    background-color: var(--ap-olive);
+}
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.ap-logo {
+    height: 60px;
+    width: auto;
+    aspect-ratio: 712 / 599;
+    object-fit: contain;
+    display: none;
+}
+
+.ap-logo-light {
+    display: block;
+}
+
+[data-bs-theme="dark"] .ap-logo-light {
+    display: none;
+}
+
+[data-bs-theme="dark"] .ap-logo-dark {
+    display: block;
+}
+
+.navbar-addpack {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+    .navbar-addpack .nav-link.active,
+    .navbar-addpack .nav-link:hover {
+        color: var(--ap-olive) !important;
+    }
+
+
+.theme-toggle-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--bs-border-color);
+    background: transparent;
+    color: var(--bs-body-color);
+}
+
+    .theme-toggle-btn:hover {
+        background: var(--bs-secondary-bg);
+    }
+
+/* ==========================================================================
+   Navbar
+   ========================================================================== */
+.footer-addpack {
+    border-top: 1px solid var(--bs-border-color);
+}
+
+    .footer-addpack h6 {
+        font-weight: 600;
+        font-size: .85rem;
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        color: var(--ap-khaki);
+    }
+
+    .footer-addpack a:hover {
+        color: var(--ap-olive) !important;
+    }
