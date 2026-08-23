@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AddPack.Models\AddPack.Models.csproj" />
+    <ProjectReference Include="..\AddPack.Utility\AddPack.Utility.csproj" />
+  </ItemGroup>
+
 </Project>
