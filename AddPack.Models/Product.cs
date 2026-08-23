@@ -1,4 +1,4 @@
-﻿namespace AddPack.Web.Models;
+﻿namespace AddPack.Models;
 
 public class Product
 {

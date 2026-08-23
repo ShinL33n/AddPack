@@ -11,4 +11,8 @@
     <ProjectReference Include="..\AddPack.DataAccess\AddPack.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>
