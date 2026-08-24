@@ -1,0 +1,166 @@
+﻿@* 
+    TO DO: 
+    - Add hierarchy view for series and their sub-series (if applicable).
+    - Add chechboxes to select multiple series for batch actions (like delete).
+    - Add a search bar to filter series by name or description.
+    - Add pagination for large lists of series.
+    - Implement sorting functionality for columns in the table view.
+*@
+
+@model IEnumerable<AddPack.Models.Series>
+
+@{
+    ViewData["Title"] = "Zarządzanie Seriami Produktów";
+}
+
+<div class="container mt-4">
+    <div class="series-toolbar d-flex justify-content-between align-items-center mb-4 pb-2">
+        <h2 class="series-page-title mb-0 fw-bolder">Zarządzanie Seriami Produktów</h2>
+        <a asp-controller="Series" asp-action="Create" class="btn btn-ap-primary shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Dodaj nową serię
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="series-cards d-lg-none">
+            @foreach (var item in Model)
+            {
+                <div class="series-card card mb-3 border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            @if (!string.IsNullOrEmpty(item.Image))
+                            {
+                                <img src="@item.Image" alt="@item.Name" class="rounded border flex-shrink-0" style="width: 64px; height: 64px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="series-thumb-placeholder rounded flex-shrink-0 d-flex align-items-center justify-content-center text-white" style="width: 64px; height: 64px;">
+                                    <i class="bi bi-image text-white-50"></i>
+                                </div>
+                            }
+                            <div class="flex-grow-1 min-width-0">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="series-name-cell fw-bold mb-1 text-break">@item.Name</h5>
+                                    <span class="series-id-badge badge border ms-2">#@item.Id</span>
+                                </div>
+                                <div class="d-flex flex-wrap gap-2 small text-muted">
+                                    <span><i class="bi bi-calendar me-1"></i>@item.CreatedAt.ToString("dd.MM.yyyy")</span>
+                                    <span><i class="bi bi-list-ol me-1"></i>@(item.SortOrder?.ToString() ?? "-")</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="card-text text-muted small mb-3">
+                            @(!string.IsNullOrEmpty(item.Description)
+                                ? item.Description.Length > 40
+                                    ? item.Description.Substring(0, 40) + "..."
+                                    : item.Description
+                                : "Brak opisu.")
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            @if (item.IsActive)
+                            {
+                                <span class="badge badge-ap px-2 py-1 rounded-pill">Aktywna</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary px-2 py-1 rounded-pill">Nieaktywna</span>
+                            }
+                            <div class="series-actions btn-group shadow-sm" role="group">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-edit" title="Edytuj">Edytuj</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Usuń">Usuń</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="series-table-wrap d-none d-lg-block">
+            <div class="table-responsive shadow-sm rounded overflow-hidden">
+                <table class="series-table table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col" class="py-3 ps-3">ID</th>
+                        <th scope="col" class="py-3">Zdjęcie</th>
+                        <th scope="col" class="py-3">Nazwa</th>
+                        <th scope="col" class="py-3">Opis</th>
+                        <th scope="col" class="py-3 text-center">Aktywna</th>
+                        <th scope="col" class="py-3">Data utworzenia</th>
+                        <th scope="col" class="py-3 text-center">Kolejność</th>
+                        <th scope="col" class="py-3 text-end pe-3">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-3 fw-bold text-muted">@item.Id</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Image))
+                                {
+                                    <img src="@item.Image" alt="@item.Name" class="rounded border" style="width: 48px; height: 48px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="series-thumb-placeholder rounded d-flex align-items-center justify-content-center text-white">
+                                        <i class="bi bi-image text-white-50"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td class="series-name-cell fw-bold">@item.Name</td>
+                            <td class="text-muted small">
+                                @(!string.IsNullOrEmpty(item.Description)
+                                    ? item.Description.Length > 40
+                                        ? item.Description.Substring(0, 40) + "..."
+                                        : item.Description
+                                    : "—")
+                            </td>
+                            <td class="text-center">
+                                @if (item.IsActive)
+                                {
+                                    <span class="badge badge-ap px-2 py-1 rounded-pill">Tak</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary px-2 py-1 rounded-pill">Nie</span>
+                                }
+                            </td>
+                            <td class="text-muted small">@item.CreatedAt.ToString("ddd dd.MM.yyyyr. HH:mm")</td>
+                            <td class="text-center">
+                                <span class="series-sort-badge badge px-2 py-1 rounded-pill">
+                                    @(item.SortOrder?.ToString() ?? "-")
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <div class="series-actions btn-group shadow-sm" role="group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-edit" title="Edytuj">
+                                        Edytuj
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Usuń">
+                                        Usuń
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="series-empty-state alert text-center p-5 shadow-sm">
+            <h4 class="mb-3">Brak dodanych serii</h4>
+            <p class="text-muted mb-4">Nie znaleziono jeszcze żadnych kategorii produktów w bazie.</p>
+            <a asp-controller="Series" asp-action="Create" class="btn btn-ap-primary"><i class="bi bi-plus me-1"></i>Utwórz pierwszą serię</a>
+        </div>
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/series-index.css" asp-append-version="true" />
+}

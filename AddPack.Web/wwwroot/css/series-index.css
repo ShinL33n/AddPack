@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Series Index styles
+   ========================================================================== */
+
+.series-page-title {
+    color: var(--ap-green-dark);
+}
+
+.series-toolbar {
+    border-bottom: 1px solid var(--ap-khaki);
+}
+
+/* Table view */
+.series-table thead th {
+    background-color: var(--ap-green);
+    color: #fff;
+}
+
+.series-table tbody {
+    background-color: var(--ap-cream);
+}
+
+.series-table tbody tr,
+.series-table tbody td {
+    background-color: transparent;
+}
+
+.series-table tbody td {
+    color: var(--bs-body-color);
+}
+
+.series-name-cell {
+    color: var(--ap-green-dark);
+}
+
+.series-thumb-placeholder {
+    width: 48px;
+    height: 48px;
+    background-color: var(--ap-khaki);
+    border: 1px solid var(--ap-olive-light);
+}
+
+.series-sort-badge {
+    background-color: var(--bs-light);
+    border: 1px solid var(--ap-khaki);
+    color: var(--bs-body-color);
+}
+
+/* Edit button — solid in light mode, outlined in dark mode */
+.series-actions .btn-edit,
+.series-cards .series-actions .btn-edit {
+    background-color: transparent;
+    color: var(--ap-olive);
+    border: 1px solid var(--ap-olive);
+}
+
+.series-actions .btn-edit:hover,
+.series-cards .series-actions .btn-edit:hover {
+    background-color: var(--ap-olive);
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .series-actions .btn-edit,
+[data-bs-theme="dark"] .series-cards .series-actions .btn-edit {
+    background-color: transparent;
+    color: var(--ap-olive-light);
+    border: 1px solid var(--ap-olive-light);
+}
+
+[data-bs-theme="dark"] .series-actions .btn-edit:hover,
+[data-bs-theme="dark"] .series-cards .series-actions .btn-edit:hover {
+    background-color: var(--ap-olive-light);
+    color: var(--bs-body-bg);
+    border-color: var(--ap-olive-light);
+}
+
+/* Empty state */
+.series-empty-state {
+    background-color: var(--ap-cream);
+    border: 1px dashed var(--ap-khaki);
+}
+
+.series-empty-state h4 {
+    color: var(--ap-green-dark);
+}
+
+/* Dark theme overrides */
+[data-bs-theme="dark"] .series-page-title {
+    color: var(--ap-khaki);
+}
+
+[data-bs-theme="dark"] .series-toolbar {
+    border-bottom-color: var(--ap-green-dark);
+}
+
+[data-bs-theme="dark"] .series-table tbody {
+    background-color: var(--bs-body-bg);
+}
+
+[data-bs-theme="dark"] .series-table tbody td {
+    color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .series-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-bs-theme="dark"] .series-name-cell {
+    color: var(--ap-olive-light);
+}
+
+[data-bs-theme="dark"] .series-sort-badge {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .series-empty-state {
+    background-color: var(--bs-body-bg);
+    border-color: var(--ap-olive);
+}
+
+[data-bs-theme="dark"] .series-empty-state h4 {
+    color: var(--ap-olive-light);
+}
+
+/* Keep Delete button readable in dark mode */
+[data-bs-theme="dark"] .series-actions .btn-outline-danger {
+    background-color: var(--bs-body-bg);
+}
+
+/* Mobile card view */
+.series-cards .series-card {
+    background-color: var(--ap-cream);
+}
+
+.series-cards .series-card .card-body {
+    color: var(--bs-body-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.series-cards .min-width-0 {
+    min-width: 0;
+}
+
+.series-id-badge {
+    background-color: var(--bs-light);
+    color: var(--bs-body-color);
+    border-color: var(--bs-border-color) !important;
+}
+
+[data-bs-theme="dark"] .series-id-badge {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--bs-body-color);
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+[data-bs-theme="dark"] .series-cards .series-card {
+    background-color: var(--bs-body-bg);
+}
+
+/* Mobile bottom row: status + actions sizing */
+.series-cards .card-body > .d-flex:last-child {
+    gap: 1rem;
+    flex-wrap: nowrap;
+    margin-top: auto;
+}
+
+.series-cards .card-body > .d-flex:last-child .badge {
+    flex: 0 0 auto;
+    min-width: 80px;
+    text-align: center;
+}
+
+.series-cards .series-actions {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+}
+
+.series-cards .series-actions .btn {
+    --bs-btn-padding-x: 0.75rem;
+    --bs-btn-padding-y: 0.425rem;
+    flex: 0 0 auto;
+    min-width: 70px;
+    max-width: none;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 360px) {
+    .series-cards .series-actions .btn {
+        min-width: 60px;
+        --bs-btn-padding-x: 0.5rem;
+    }
+}
+
+/* Tablet view: card view below 1080px because full table gets cut off */
+@media (max-width: 1079.98px) {
+    .series-cards {
+        display: block !important;
+    }
+
+    .series-table-wrap {
+        display: none !important;
+    }
+}
