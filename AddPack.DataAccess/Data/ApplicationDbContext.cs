@@ -73,7 +73,12 @@ namespace AddPack.DataAccess.Data
                     SortOrder = 5,
                     CreatedAt = new DateTime(2026, 8, 24, 22, 17, 50, DateTimeKind.Utc)
                 }
-                );
+            );
+
+            modelBuilder.Entity<Series>().HasOne(s => s.SeriesParentId)
+                                         .WithMany()
+                                         .HasForeignKey(s => s.ParentId)
+                                         .OnDelete(DeleteBehavior.SetNull);
 
 
         modelBuilder.Entity<Product>().HasData(

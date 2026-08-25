@@ -40,7 +40,8 @@ body {
     --ap-olive-light: #C0BE50;
     --ap-olive: #737D31;
     --ap-khaki: #A09D65;
-    --ap-cream: #F7F6F1;
+    --ap-cream: #FEFBEA;
+    --ap-bg-dark: #212928;
 }
 
 /* Przycisk w kolorze marki - używany w stopce (newsletter), na kartach
@@ -61,6 +62,13 @@ body {
    "DEMO" / "Nowość" na kartach produktów. */
 .badge-ap {
     background-color: var(--ap-olive);
+}
+
+.ap-logo-lg {
+    height: auto !important;
+    width: 100% !important;
+    max-width: 220px;
+    margin: 0 auto;
 }
 
 /* ==========================================================================
@@ -130,3 +138,6 @@ body {
     .footer-addpack a:hover {
         color: var(--ap-olive) !important;
     }
+
+
+

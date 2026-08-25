@@ -70,7 +70,7 @@
 [data-bs-theme="dark"] .series-actions .btn-edit:hover,
 [data-bs-theme="dark"] .series-cards .series-actions .btn-edit:hover {
     background-color: var(--ap-olive-light);
-    color: var(--bs-body-bg);
+    color: var(--ap-bg-dark);
     border-color: var(--ap-olive-light);
 }
 
@@ -84,6 +84,31 @@
     color: var(--ap-green-dark);
 }
 
+/* Shared page background for list and forms */
+.series-page-bg,
+.series-index-page,
+.series-edit-page,
+.series-delete-page,
+.series-create-page {
+    background-color: transparent;
+}
+
+.series-index-page .series-table > :not(caption),
+.series-index-page .series-cards .series-card,
+.series-edit-page .series-edit-card,
+.series-delete-page .series-delete-card,
+.series-create-page .series-create-card {
+    background-color: var(--ap-cream);
+}
+
+[data-bs-theme="dark"] .series-index-page .series-table > :not(caption),
+[data-bs-theme="dark"] .series-index-page .series-cards .series-card,
+[data-bs-theme="dark"] .series-edit-page .series-edit-card,
+[data-bs-theme="dark"] .series-delete-page .series-delete-card,
+[data-bs-theme="dark"] .series-create-page .series-create-card {
+    background-color: var(--ap-bg-dark);
+}
+
 /* Dark theme overrides */
 [data-bs-theme="dark"] .series-page-title {
     color: var(--ap-khaki);
@@ -94,7 +119,7 @@
 }
 
 [data-bs-theme="dark"] .series-table tbody {
-    background-color: var(--bs-body-bg);
+    background-color: var(--ap-bg-dark);
 }
 
 [data-bs-theme="dark"] .series-table tbody td {
@@ -115,7 +140,7 @@
 }
 
 [data-bs-theme="dark"] .series-empty-state {
-    background-color: var(--bs-body-bg);
+    background-color: var(--ap-bg-dark);
     border-color: var(--ap-olive);
 }
 
@@ -125,7 +150,51 @@
 
 /* Keep Delete button readable in dark mode */
 [data-bs-theme="dark"] .series-actions .btn-outline-danger {
-    background-color: var(--bs-body-bg);
+    background-color: var(--ap-bg-dark);
+}
+
+/* Edit view card */
+.series-edit-card .card-body,
+.series-delete-card .card-body,
+.series-create-card .card-body {
+    background-color: var(--ap-cream);
+}
+
+[data-bs-theme="dark"] .series-edit-card .card-body,
+[data-bs-theme="dark"] .series-delete-card .card-body,
+[data-bs-theme="dark"] .series-create-card .card-body {
+    background-color: var(--ap-bg-dark);
+}
+
+/* Form switch theming */
+.form-check-input:focus {
+    border-color: var(--ap-olive);
+    box-shadow: 0 0 0 0.25rem rgba(115, 125, 49, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--ap-olive);
+    border-color: var(--ap-olive);
+}
+
+[data-bs-theme="dark"] .form-check-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+[data-bs-theme="dark"] .form-check-input:checked {
+    background-color: var(--ap-olive-light);
+    border-color: var(--ap-olive-light);
+}
+
+[data-bs-theme="dark"] .form-check-input:focus {
+    border-color: var(--ap-olive-light);
+    box-shadow: 0 0 0 0.25rem rgba(192, 190, 80, 0.25);
+}
+
+[data-bs-theme="dark"] .series-id-badge {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
 /* Mobile card view */
@@ -156,7 +225,7 @@
 }
 
 [data-bs-theme="dark"] .series-cards .series-card {
-    background-color: var(--bs-body-bg);
+    background-color: var(--ap-bg-dark);
 }
 
 /* Mobile bottom row: status + actions sizing */

@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "O nas";
+}
+
+<!-- ==========================================================================
+     HERO
+     ========================================================================== -->
+<section class="py-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <img src="~/images/brand/logo-light.svg" alt="AddPack DEMO" class="ap-logo ap-logo-light ap-logo-lg" fetchpriority="high">
+            <img src="~/images/brand/logo.svg" alt="AddPack DEMO" class="ap-logo ap-logo-dark ap-logo-lg" fetchpriority="high">
+            <h1 class="fw-bold mb-3">Budżetowy sprzęt outdoorowy, budowany razem z Wami</h1>
+            <p class="fs-5 text-body-secondary mb-4">
+                Robimy kuchenki, garnki i akcesoria bushcraftowe tak, jak sami chcielibyśmy je kupić —
+                bez przepłacania za markę, ale bez kompromisów tam, gdzie naprawdę się liczą: waga, trwałość i estetyka.
+            </p>
+            <a class="btn btn-ap-primary btn-lg" asp-area="" asp-controller="Store" asp-action="Index">
+                Zobacz aktualną ofertę
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     HISTORIA
+     ========================================================================== -->
+<section class="py-5">
+    <div class="row align-items-center gy-4">
+        <div class="col-lg-6">
+            <h2 class="fw-bold mb-3">Skąd wzięło się AddPack</h2>
+            <p class="text-body-secondary">
+                AddPack zaczęło się od prostego pytania: dlaczego dobry sprzęt bushcraftowy musi kosztować tyle,
+                co reszta wyposażenia razem wzięta? Kuchenki spirytusowe z tytanu, ultralekkie zestawy garnków —
+                świetne, ale dla wielu osób po prostu za drogie na start przygody z outdoorem.
+            </p>
+            <p class="text-body-secondary mb-0">
+                Postanowiliśmy zrobić to inaczej: zaprojektować sprzęt, który wygląda i działa jak produkt
+                premium, ale jest dostępny cenowo — bo zamiast tytanu i licencjonowanych kształtów, stawiamy
+                na przemyślane materiały, prosty montaż i bezpośrednią relację z osobami, które go testują.
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <div class="bg-body-tertiary rounded-4 p-5 text-center">
+                <img src="~/images/brand/logo-demo-light.svg" alt="AddPack DEMO" class="ap-logo ap-logo-light ap-logo-lg" fetchpriority="high">
+                <img src="~/images/brand/logo-demo.svg" alt="AddPack DEMO" class="ap-logo ap-logo-dark ap-logo-lg" fetchpriority="high">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     JAK PRODUKUJEMY
+     ========================================================================== -->
+<section class="py-5">
+    <h2 class="fw-bold text-center mb-2">Jak to robimy</h2>
+    <p class="text-body-secondary text-center mb-5">
+        Hybrydowe podejście — to co da się zrobić dobrze w domu, robimy sami. Resztę zlecamy tam,
+        gdzie wychodzi to najtaniej bez utraty jakości.
+    </p>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="text-center px-3">
+                <div class="fs-1 mb-3" style="color: var(--ap-olive);">
+                    <i class="bi bi-house-gear"></i>
+                </div>
+                <h5 class="fw-semibold">Montaż domowy</h5>
+                <p class="text-body-secondary small mb-0">
+                    Składanie, wykańczanie i kontrola jakości każdego egzemplarza odbywają się ręcznie —
+                    dzięki temu wiemy dokładnie, co trafia do paczki.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center px-3">
+                <div class="fs-1 mb-3" style="color: var(--ap-olive);">
+                    <i class="bi bi-bounding-box-circles"></i>
+                </div>
+                <h5 class="fw-semibold">Lokalne usługi</h5>
+                <p class="text-body-secondary small mb-0">
+                    Cięcie laserowe blach i druk 3D elementów zlecamy lokalnym firmom — precyzja i estetyka,
+                    których nie da się osiągnąć ręcznie w domowych warunkach.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="text-center px-3">
+                <div class="fs-1 mb-3" style="color: var(--ap-olive);">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h5 class="fw-semibold">Komponenty</h5>
+                <p class="text-body-secondary small mb-0">
+                    Podstawowe elementy (np. garnki) sprowadzamy od sprawdzonych dostawców, żeby skupić się
+                    na tym, co faktycznie odróżnia nasz sprzęt od reszty.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     WARTOŚCI
+     ========================================================================== -->
+<section class="py-5 bg-body-tertiary rounded-4 my-4">
+    <div class="row g-4 px-3 px-lg-5">
+        <div class="col-sm-6 col-lg-3">
+            <i class="bi bi-piggy-bank fs-3 mb-2 d-block" style="color: var(--ap-green);"></i>
+            <h6 class="fw-semibold">Budżetowo, ale solidnie</h6>
+            <p class="text-body-secondary small mb-0">Niska waga i dobra jakość bez cen sprzętu premium.</p>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <i class="bi bi-chat-square-heart fs-3 mb-2 d-block" style="color: var(--ap-green);"></i>
+            <h6 class="fw-semibold">Transparentne DEMO</h6>
+            <p class="text-body-secondary small mb-0">Pierwsza linia produktów rozwija się dzięki Waszemu feedbackowi.</p>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: var(--ap-green);"></i>
+            <h6 class="fw-semibold">Projekt z Polski</h6>
+            <p class="text-body-secondary small mb-0">Projektowane, testowane i pakowane lokalnie.</p>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+            <i class="bi bi-arrow-repeat fs-3 mb-2 d-block" style="color: var(--ap-green);"></i>
+            <h6 class="fw-semibold">Ciągłe doskonalenie</h6>
+            <p class="text-body-secondary small mb-0">Każda kolejna seria poprawia to, co zgłosiliście wcześniej.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     CO DALEJ
+     ========================================================================== -->
+<section class="py-5 text-center">
+    <h2 class="fw-bold mb-3">DEMO to dopiero początek</h2>
+    <p class="text-body-secondary mb-4 col-lg-7 mx-auto">
+        Jeśli linia DEMO się sprawdzi, w planach są kolejne, bardziej dopracowane serie produktów.
+    </p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <span class="badge badge-ap px-3 py-2">GEAR</span>
+        <span class="badge badge-ap px-3 py-2">SYSTEMS</span>
+        <span class="badge badge-ap px-3 py-2">SURVIVAL</span>
+    </div>
+</section>

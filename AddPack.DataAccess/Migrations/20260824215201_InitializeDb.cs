@@ -35,7 +35,8 @@ namespace AddPack.DataAccess.Migrations
                         name: "FK_Series_Series_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Series",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

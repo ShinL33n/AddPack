@@ -2,6 +2,7 @@
     TO DO: 
     - Add hierarchy view for series and their sub-series (if applicable).
     - Add chechboxes to select multiple series for batch actions (like delete).
+    - Add active series list first
     - Add a search bar to filter series by name or description.
     - Add pagination for large lists of series.
     - Implement sorting functionality for columns in the table view.
@@ -13,7 +14,7 @@
     ViewData["Title"] = "Zarządzanie Seriami Produktów";
 }
 
-<div class="container mt-4">
+<div class="container mt-4 series-index-page">
     <div class="series-toolbar d-flex justify-content-between align-items-center mb-4 pb-2">
         <h2 class="series-page-title mb-0 fw-bolder">Zarządzanie Seriami Produktów</h2>
         <a asp-controller="Series" asp-action="Create" class="btn btn-ap-primary shadow-sm">
@@ -70,7 +71,12 @@
                             }
                             <div class="series-actions btn-group shadow-sm" role="group">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-edit" title="Edytuj">Edytuj</a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger" title="Usuń">Usuń</a>
+                                <form asp-action="Archive" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                            style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                        Wyłącz
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -139,9 +145,12 @@
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-edit" title="Edytuj">
                                         Edytuj
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Usuń">
-                                        Usuń
-                                    </a>
+                                    <form asp-action="Archive" asp-route-id="@item.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                            Wyłącz
+                                        </button>
+                                    </form>
                                 </div>
                             </td>
                         </tr>
