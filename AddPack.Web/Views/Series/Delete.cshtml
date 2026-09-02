@@ -47,14 +47,6 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="ParentId" class="form-label fw-bold"></label>
-                                <select asp-for="ParentId" disabled class="form-select" asp-items="ViewBag.ParentSeries">
-                                    <option value="">— Brak —</option>
-                                </select>
-                                <span asp-validation-for="ParentId" class="text-danger small"></span>
-                            </div>
-
-                            <div class="col-md-6 mb-3">
                                 <label asp-for="SortOrder" class="form-label fw-bold"></label>
                                 <input asp-for="SortOrder" disabled class="form-control" type="number" placeholder="0" />
                                 <span asp-validation-for="SortOrder" class="text-danger small"></span>

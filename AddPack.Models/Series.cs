@@ -6,7 +6,7 @@ namespace AddPack.Models;
 public class Series
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     [Display(Name="Nazwa serii")]
@@ -16,13 +16,7 @@ public class Series
     public string Slug { get; set; } = string.Empty;
 
     [Display(Name = "Opis serii")]
-    public string? Description { get; set; }
-
-    [Display(Name = "Seria nadrzędna")]
-    public int? ParentId { get; set; }
-
-    [ForeignKey(nameof(ParentId))]
-    public Series? SeriesParentId { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [Display(Name = "Zdjęcie")]
     public string? Image { get; set; }
@@ -32,7 +26,9 @@ public class Series
     public bool IsActive { get; set; }
 
     [Display(Name = "Kolejność wyświetlania")]
-    public int? SortOrder { get; set; } // auto increment?
+    public int? SortOrder { get; set; } // auto increment if null
+
+    [Display(Name = "Utworzono")]
     public DateTime CreatedAt { get; set; }
 
 }

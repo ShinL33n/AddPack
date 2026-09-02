@@ -12,4 +12,8 @@
     <ProjectReference Include="..\AddPack.Utility\AddPack.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\IServices\" />
+  </ItemGroup>
+
 </Project>

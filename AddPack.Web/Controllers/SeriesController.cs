@@ -1,4 +1,5 @@
-﻿using AddPack.DataAccess.Data;
+﻿using AddPack.Business.Services;
+using AddPack.DataAccess.Data;
 using AddPack.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,16 +8,19 @@ namespace AddPack.Web.Controllers;
 
 public class SeriesController : Controller
 {
-    private readonly ApplicationDbContext _dbcontext;
+    private readonly ISeriesService _seriesService;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
-    public SeriesController(ApplicationDbContext dbcontext)
+    public SeriesController(ISeriesService seriesService,
+                            IWebHostEnvironment webHostEnvironment)
     {
-        _dbcontext = dbcontext;
+        _seriesService = seriesService;
+        _webHostEnvironment = webHostEnvironment;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var series = _dbcontext.Series.ToList();
+        var series = await _seriesService.GetAllSeriesAsync();
 
         return View(series);
     }
@@ -27,46 +31,103 @@ public class SeriesController : Controller
         return View();
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Series series)
+    public async Task<IActionResult> Create(Series series, IFormFile? file)
     {
+        series.Id = Guid.NewGuid();
         series.CreatedAt = DateTime.UtcNow;
 
-        _dbcontext.Series.Add(series);
-        _dbcontext.SaveChanges();
+        if (file != null)
+        {
+            series.Image = await AddImageAsync(file, series.Id, series.Name);
+        }
 
-        return RedirectToAction("Index");
+        if (series.SortOrder == null)
+        {
+            var maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
+            series.SortOrder = maxSortOrder + 1;
+        }
+
+        if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name))
+        {
+            ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+        }
+
+        if (ModelState.IsValid)
+        {
+            var seriesCreated = await _seriesService.CreateSeriesAsync(series);
+            TempData["Success"] = $"Seria {seriesCreated.Name} została utworzona pomyślnie.";
+
+            return RedirectToAction("Index");
+        }
+
+        return View();
     }
 
     [HttpGet]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(Guid? id)
     {
-        var series = _dbcontext.Series.Find(id);
+        if (!id.HasValue || id == null)
+        {
+            return NotFound();
+        }
 
-        // need dto
+        var series = await _seriesService.GetSeriesByIdAsync(id.Value);
+
+        if(series == null)
+        {
+            return NotFound();
+        }
 
         return View(series);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(Series series)
+    public async Task<IActionResult> EditAsync(Series series, IFormFile? file)
     {
-        _dbcontext.Series.Update(series);
-        _dbcontext.SaveChanges();
+        if (file != null)
+        {
+            series.Image = await AddImageAsync(file, series.Id, series.Name);
+        }
 
+        if (series.SortOrder == null)
+        {
+            var maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
+            series.SortOrder = maxSortOrder + 1;
+        }
 
-        return RedirectToAction("Index");
+        if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name, series.Id))
+        {
+            ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+        }
+
+        if (ModelState.IsValid)
+        {
+            var seriesUpdated = await _seriesService.UpdateSeriesAsync(series);
+            TempData["Success"] = $"Seria {seriesUpdated.Name} została pomyślnie zaktualizowana.";
+
+            return RedirectToAction("Index");
+        }
+
+        return View();
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(Guid? id)
     {
-        var series = _dbcontext.Series.Find(id);
+        if (!id.HasValue || id == null)
+        {
+            return NotFound();
+        }
 
-        // need dto
+        var series = await _seriesService.GetSeriesByIdAsync(id.Value);
+
+        if (series == null)
+        {
+            return NotFound();
+        }
 
         return View(series);
     }
@@ -74,26 +135,47 @@ public class SeriesController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [ActionName("Delete")]
-    public IActionResult DeletePOST(int id)
+    public async Task<IActionResult> DeletePOST(Guid id)
     {
-        var series = _dbcontext.Series.Find(id);
-        _dbcontext.Series.Remove(series);
-        _dbcontext.SaveChanges();
-
-
+        await _seriesService.DeleteSeriesAsync(id);
+        TempData["Success"] = "Series deleted successfully";
         return RedirectToAction("Index");
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Archive(int id)
+    public async Task<IActionResult> Archive(Guid id)
     {
-        var series = _dbcontext.Series.Find(id);
-        series.IsActive = false;
-        _dbcontext.Series.Update(series);
-        _dbcontext.SaveChanges();
-
+        var seriesToArchive = await _seriesService.GetSeriesByIdAsync(id);
+        if(seriesToArchive != null)
+        {
+            seriesToArchive.IsActive = false;
+            await _seriesService.UpdateSeriesAsync(seriesToArchive);
+        }
 
         return RedirectToAction("Index");
+    }
+
+
+
+    public async Task<string> AddImageAsync(IFormFile file, Guid guid, string name)
+    {
+        string wwwRootPath = _webHostEnvironment.WebRootPath;
+
+        string fileName = guid.ToString() + "_" + name + Path.GetExtension(file.FileName);
+        string seriesPath = Path.Combine("images", "series");
+        string finalPath = Path.Combine(wwwRootPath, seriesPath);
+
+        if (!Directory.Exists(finalPath))
+        {
+            Directory.CreateDirectory(finalPath);
+        }
+
+        using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+        {
+            await file.CopyToAsync(fileStream);
+        }
+
+        return Path.Combine(@"\", seriesPath, fileName).Replace("\\", "/");
     }
 }

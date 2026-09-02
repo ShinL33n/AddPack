@@ -33,6 +33,7 @@
                             <span asp-validation-for="Name" class="text-danger small"></span>
                         </div>
 
+						@* MAKE SLUG AUTO-GENERATED FROM NAME FIELD (IN REAL TIME) BUT EDITABLE*@
                         <div class="mb-3">
                             <label asp-for="Slug" class="form-label fw-bold"></label>
                             <input asp-for="Slug" class="form-control" placeholder="np. moja-seria" />
@@ -46,14 +47,6 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="ParentId" class="form-label fw-bold"></label>
-                                <select asp-for="ParentId" class="form-select" asp-items="ViewBag.ParentSeries">
-                                    <option value="">— Brak —</option>
-                                </select>
-                                <span asp-validation-for="ParentId" class="text-danger small"></span>
-                            </div>
-
                             <div class="col-md-6 mb-3">
                                 <label asp-for="SortOrder" class="form-label fw-bold"></label>
                                 <input asp-for="SortOrder" class="form-control" type="number" placeholder="0" />

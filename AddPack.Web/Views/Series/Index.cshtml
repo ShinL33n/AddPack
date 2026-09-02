@@ -43,11 +43,10 @@
                             <div class="flex-grow-1 min-width-0">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <h5 class="series-name-cell fw-bold mb-1 text-break">@item.Name</h5>
-                                    <span class="series-id-badge badge border ms-2">#@item.Id</span>
+                                    <span class="text-muted"><i class="bi bi-list-ol me-1"></i>@(item.SortOrder?.ToString() ?? "-")</span>
                                 </div>
                                 <div class="d-flex flex-wrap gap-2 small text-muted">
                                     <span><i class="bi bi-calendar me-1"></i>@item.CreatedAt.ToString("dd.MM.yyyy")</span>
-                                    <span><i class="bi bi-list-ol me-1"></i>@(item.SortOrder?.ToString() ?? "-")</span>
                                 </div>
                             </div>
                         </div>
@@ -89,13 +88,12 @@
                 <table class="series-table table table-hover align-middle mb-0">
                 <thead>
                     <tr>
-                        <th scope="col" class="py-3 ps-3">ID</th>
+                        <th scope="col" class="py-3 text-center">Kolejność</th>
                         <th scope="col" class="py-3">Zdjęcie</th>
                         <th scope="col" class="py-3">Nazwa</th>
                         <th scope="col" class="py-3">Opis</th>
                         <th scope="col" class="py-3 text-center">Aktywna</th>
                         <th scope="col" class="py-3">Data utworzenia</th>
-                        <th scope="col" class="py-3 text-center">Kolejność</th>
                         <th scope="col" class="py-3 text-end pe-3">Akcje</th>
                     </tr>
                 </thead>
@@ -103,7 +101,11 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td class="ps-3 fw-bold text-muted">@item.Id</td>
+                                <td class="text-center">
+                                    <span class="series-sort-badge badge px-2 py-1 rounded-pill">
+                                        @(item.SortOrder?.ToString() ?? "-")
+                                    </span>
+                                </td>
                             <td>
                                 @if (!string.IsNullOrEmpty(item.Image))
                                 {
@@ -135,11 +137,6 @@
                                 }
                             </td>
                             <td class="text-muted small">@item.CreatedAt.ToString("ddd dd.MM.yyyyr. HH:mm")</td>
-                            <td class="text-center">
-                                <span class="series-sort-badge badge px-2 py-1 rounded-pill">
-                                    @(item.SortOrder?.ToString() ?? "-")
-                                </span>
-                            </td>
                             <td class="text-end pe-3">
                                 <div class="series-actions btn-group shadow-sm" role="group">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-edit" title="Edytuj">
