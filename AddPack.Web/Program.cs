@@ -29,6 +29,11 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
+    pattern: "{controller=Home}/{action=Index}/{slug?}")
+    .WithStaticAssets();
+
+app.MapControllerRoute(
+    name: "id-driven",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 

@@ -71,6 +71,10 @@ namespace AddPack.DataAccess.Data
                 }
             );
 
+            modelBuilder.Entity<Series>()
+                .HasIndex(s => s.Slug)
+                .IsUnique();
+
 
             // SEED INITIAL DATA FOR CATEGORIES
             modelBuilder.Entity<Category>().HasData(

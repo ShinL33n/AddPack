@@ -49,9 +49,16 @@ public class SeriesController : Controller
             series.SortOrder = maxSortOrder + 1;
         }
 
+        // Add validator
+
         if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name))
         {
-            ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+            ModelState.AddModelError("Name", "Seria o tej nazwie już istnieje.");
+        }
+
+        if (!String.IsNullOrEmpty(series.Slug) && !await _seriesService.IsNameUniqueAsync(series.Slug))
+        {
+            ModelState.AddModelError("Slug", "Slug o tej nazwie już istnieje.");
         }
 
         if (ModelState.IsValid)
@@ -59,23 +66,72 @@ public class SeriesController : Controller
             var seriesCreated = await _seriesService.CreateSeriesAsync(series);
             TempData["Success"] = $"Seria {seriesCreated.Name} została utworzona pomyślnie.";
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         return View();
     }
 
+    //[HttpGet]
+    //public async Task<IActionResult> Edit(Guid? id)
+    //{
+    //    if (!id.HasValue || id == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    var series = await _seriesService.GetSeriesByIdAsync(id.Value);
+
+    //    if(series == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    return View(series);
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //public async Task<IActionResult> EditAsync(Series series, IFormFile? file)
+    //{
+    //    if (file != null)
+    //    {
+    //        series.Image = await AddImageAsync(file, series.Id, series.Name);
+    //    }
+
+    //    if (series.SortOrder == null)
+    //    {
+    //        var maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
+    //        series.SortOrder = maxSortOrder + 1;
+    //    }
+
+    //    if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name, series.Id))
+    //    {
+    //        ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+    //    }
+
+    //    if (ModelState.IsValid)
+    //    {
+    //        var seriesUpdated = await _seriesService.UpdateSeriesAsync(series);
+    //        TempData["Success"] = $"Seria {seriesUpdated.Name} została pomyślnie zaktualizowana.";
+
+    //        return RedirectToAction("Index");
+    //    }
+
+    //    return View();
+    //}
+
     [HttpGet]
-    public async Task<IActionResult> Edit(Guid? id)
+    public async Task<IActionResult> Edit(string? slug)
     {
-        if (!id.HasValue || id == null)
+        if (string.IsNullOrEmpty(slug))
         {
             return NotFound();
         }
 
-        var series = await _seriesService.GetSeriesByIdAsync(id.Value);
+        var series = await _seriesService.GetSeriesBySlugAsync(slug);
 
-        if(series == null)
+        if (series == null)
         {
             return NotFound();
         }
@@ -85,7 +141,7 @@ public class SeriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EditAsync(Series series, IFormFile? file)
+    public async Task<IActionResult> Edit(Series series, IFormFile? file)
     {
         if (file != null)
         {
@@ -98,9 +154,16 @@ public class SeriesController : Controller
             series.SortOrder = maxSortOrder + 1;
         }
 
+        // Add validator
+
         if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name, series.Id))
         {
             ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+        }
+
+        if (!String.IsNullOrEmpty(series.Slug) && !await _seriesService.IsNameUniqueAsync(series.Slug, series.Id))
+        {
+            ModelState.AddModelError("", "Slug o tej nazwie już istnieje.");
         }
 
         if (ModelState.IsValid)
@@ -108,7 +171,7 @@ public class SeriesController : Controller
             var seriesUpdated = await _seriesService.UpdateSeriesAsync(series);
             TempData["Success"] = $"Seria {seriesUpdated.Name} została pomyślnie zaktualizowana.";
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         return View();
@@ -142,6 +205,34 @@ public class SeriesController : Controller
         return RedirectToAction("Index");
     }
 
+    //[HttpGet]
+    //public async Task<IActionResult> Delete(string slug)
+    //{
+    //    if (string.IsNullOrEmpty(slug))
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    var series = await _seriesService.GetSeriesBySlugAsync(slug);
+
+    //    if (series == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    return View(series);
+    //}
+
+    //[HttpPost]
+    //[ValidateAntiForgeryToken]
+    //[ActionName("Delete")]
+    //public async Task<IActionResult> DeletePOST(string slug)
+    //{
+    //    await _seriesService.DeleteSeriesBySlugAsync(slug);
+    //    TempData["Success"] = "Series deleted successfully";
+    //    return RedirectToAction(nameof(Index));
+    //}
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Archive(Guid id)
@@ -153,7 +244,7 @@ public class SeriesController : Controller
             await _seriesService.UpdateSeriesAsync(seriesToArchive);
         }
 
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
 
 

@@ -8,11 +8,13 @@ namespace AddPack.Business.Services;
 public interface ISeriesService
 {
     Task<Series?> GetSeriesByIdAsync(Guid id);
+    Task<Series?> GetSeriesBySlugAsync(string slug);
     Task<IEnumerable<Series>> GetAllSeriesAsync();
     Task<IEnumerable<Series>> GetAllActiveSeriesAsync();
     Task<Series> CreateSeriesAsync(Series series);
     Task<Series> UpdateSeriesAsync(Series series);
     Task DeleteSeriesAsync(Guid id);
+    Task DeleteSeriesBySlugAsync(string slug);
 
     Task<int> GetMaxSortOrderAsync();
     Task<bool> IsNameUniqueAsync(string name, Guid? id = null);
@@ -31,6 +33,11 @@ public class SeriesService : ISeriesService
     public async Task<Series?> GetSeriesByIdAsync(Guid id)
     {
         return await _dbContext.Series.FindAsync(id);
+    }
+
+    public async Task<Series?> GetSeriesBySlugAsync(string slug)
+    {
+        return await _dbContext.Series.FirstOrDefaultAsync(s => s.Slug == slug);
     }
 
     public async Task<IEnumerable<Series>> GetAllSeriesAsync()
@@ -61,6 +68,16 @@ public class SeriesService : ISeriesService
     public async Task DeleteSeriesAsync(Guid id)
     {
         var series = _dbContext.Series.Find(id);
+
+        if (series != null)
+        {
+            _dbContext.Series.Remove(series);
+            await _dbContext.SaveChangesAsync();
+        }
+    }
+    public async Task DeleteSeriesBySlugAsync(string slug)
+    {
+        var series = _dbContext.Series.FirstOrDefault(s => s.Slug == slug);
 
         if (series != null)
         {
