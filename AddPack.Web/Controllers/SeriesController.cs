@@ -247,6 +247,20 @@ public class SeriesController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ArchiveSelected(List<Guid> ids)
+    {
+        int rowsAffected = await _seriesService.UpdateSelectedSeriesAsync(ids);
+        
+        if(rowsAffected > 0)
+            TempData["Success"] = $"{rowsAffected} series archived successfully.";
+        else
+            TempData["Error"] = "No series were updated. Please try again.";
+
+        return RedirectToAction(nameof(Index));
+    }
+
 
 
     public async Task<string> AddImageAsync(IFormFile file, Guid guid, string name)

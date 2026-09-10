@@ -255,6 +255,22 @@
     font-size: 0.875rem;
 }
 
+.bi-square:hover::before {
+    content: "\F26D"; /* kod bi-check2-square */
+    color: var(--ap-khaki);
+    cursor: pointer;
+}
+
+.bi-check-square:hover::before {
+    content: "\F584"; /* kod bi-check2-square */
+    color: var(--ap-khaki);
+    cursor: pointer;
+}
+
+.btn-select-all {
+    padding: 1rem .7rem;
+}
+
 @media (max-width: 360px) {
     .series-cards .series-actions .btn {
         min-width: 60px;

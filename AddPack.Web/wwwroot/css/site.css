@@ -52,11 +52,35 @@ body {
     color: #fff;
 }
 
-.btn-ap-primary:hover {
-    background-color: var(--ap-green-dark);
-    border-color: var(--ap-green-dark);
-    color: #fff;
+    .btn-ap-primary:hover {
+        background-color: var(--ap-green-dark);
+        border-color: var(--ap-green-dark);
+        color: #fff;
+    }
+
+.btn-ap-outline{
+    background-color: transparent;
+    color: var(--ap-olive);
+    border: 1px solid var(--ap-olive);
 }
+
+    .btn-ap-outline:hover {
+        background-color: var(--ap-olive);
+        color: #fff;
+    }
+
+
+[data-bs-theme="dark"] .btn-ap-outline {
+    background-color: transparent;
+    color: var(--ap-olive-light);
+    border: 1px solid var(--ap-olive-light);
+}
+
+    [data-bs-theme="dark"] .btn-ap-outline:hover {
+        background-color: var(--ap-olive-light);
+        color: var(--ap-bg-dark);
+        border-color: var(--ap-olive-light);
+    }
 
 /* Badge w kolorze marki - licznik koszyka w navbarze, ale też np. etykieta
    "DEMO" / "Nowość" na kartach produktów. */

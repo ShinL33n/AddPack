@@ -28,12 +28,14 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-    name: "default",
+    //name: "default",
+    name: "slug-driven",
     pattern: "{controller=Home}/{action=Index}/{slug?}")
     .WithStaticAssets();
 
 app.MapControllerRoute(
-    name: "id-driven",
+    //name: "id-driven",
+    name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 

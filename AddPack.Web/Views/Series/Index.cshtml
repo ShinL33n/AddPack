@@ -25,6 +25,13 @@
     @if (Model != null && Model.Any())
     {
         <div class="series-cards d-lg-none">
+            <form asp-action="ArchiveSelected" method="post">
+                @Html.AntiForgeryToken()
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-archive me-1"></i> Zarchiwizuj zaznaczone
+                    </button>
+                </div>
             @foreach (var item in Model)
             {
                 <div class="series-card card mb-3 border-0 shadow-sm">
@@ -81,13 +88,22 @@
                     </div>
                 </div>
             }
+            </form>
         </div>
 
         <div class="series-table-wrap d-none d-lg-block">
+            <form asp-action="ArchiveSelected" method="post">
+                @Html.AntiForgeryToken()
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button type="submit" class="btn btn-sm btn-ap-outline">
+                        <i class="bi bi-archive me-1"></i> Zarchiwizuj zaznaczone
+                    </button>
+                </div>
             <div class="table-responsive shadow-sm rounded overflow-hidden">
                 <table class="series-table table table-hover align-middle mb-0">
                 <thead>
                     <tr>
+                        <th scope="col" class="py-3 text-center"><i id="select-all" class="bi bi-square me-1"></i></th>
                         <th scope="col" class="py-3 text-center">Kolejność</th>
                         <th scope="col" class="py-3">Zdjęcie</th>
                         <th scope="col" class="py-3">Nazwa</th>
@@ -101,11 +117,16 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                                <td class="text-center">
-                                    <span class="series-sort-badge badge px-2 py-1 rounded-pill">
-                                        @(item.SortOrder?.ToString() ?? "-")
-                                    </span>
-                                </td>
+                            <td class="text-center" style="padding: 0">
+                                <label class="btn-select-all">
+                                    <input type="checkbox" name="ids" value="@item.Id" class="item-checkbox" />
+                                </label>
+                            </td>
+                            <td class="text-center">
+                                <span class="series-sort-badge badge px-2 py-1 rounded-pill">
+                                    @(item.SortOrder?.ToString() ?? "-")
+                                </span>
+                            </td>
                             <td>
                                 @if (!string.IsNullOrEmpty(item.Image))
                                 {
@@ -145,19 +166,20 @@
                                     <a asp-action="Edit" asp-route-slug="@item.Slug" class="btn btn-sm btn-edit" title="Edytuj">
                                         Edytuj
                                     </a>
-                                    <form asp-action="Archive" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    @* <form asp-action="Archive" asp-route-id="@item.Id" method="post" class="d-inline">
                                         <button type="submit" class="btn btn-sm btn-outline-danger"
                                                 style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
                                             Wyłącz
                                         </button>
-                                    </form>
+                                    </form> *@
                                 </div>
                             </td>
                         </tr>
                     }
                 </tbody>
                 </table>
-            </div>
+                </div>
+            </form>
         </div>
     }
     else
@@ -173,3 +195,19 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/series-index.css" asp-append-version="true" />
 }
+
+<script>
+    document.getElementById('select-all').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('input[name="ids"]');
+        const icon = this;
+
+        // sprawdź, czy wszystkie są już zaznaczone -> jeśli tak, odznacz wszystkie (toggle)
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+        checkboxes.forEach(cb => cb.checked = !allChecked);
+
+        // podmień ikonę zgodnie z nowym stanem
+        icon.classList.toggle('bi-square', allChecked);
+        icon.classList.toggle('bi-check-square', !allChecked);
+    });
+</script>

@@ -13,8 +13,11 @@ public interface ISeriesService
     Task<IEnumerable<Series>> GetAllActiveSeriesAsync();
     Task<Series> CreateSeriesAsync(Series series);
     Task<Series> UpdateSeriesAsync(Series series);
+    Task<int> UpdateSelectedSeriesAsync(List<Guid> ids);
+
     Task DeleteSeriesAsync(Guid id);
     Task DeleteSeriesBySlugAsync(string slug);
+    Task<int> DeleteSelectedSeriesAsync(List<Guid> ids);
 
     Task<int> GetMaxSortOrderAsync();
     Task<bool> IsNameUniqueAsync(string name, Guid? id = null);
@@ -65,6 +68,16 @@ public class SeriesService : ISeriesService
         return series;
     }
 
+    public async Task<int> UpdateSelectedSeriesAsync(List<Guid> ids)
+    {
+        if(ids == null || ids.Count == 0)
+            return 0;
+
+        return await _dbContext.Series
+            .Where(s => ids.Contains(s.Id))
+            .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.IsActive, false));
+    }
+
     public async Task DeleteSeriesAsync(Guid id)
     {
         var series = _dbContext.Series.Find(id);
@@ -75,6 +88,16 @@ public class SeriesService : ISeriesService
             await _dbContext.SaveChangesAsync();
         }
     }
+    public async Task<int> DeleteSelectedSeriesAsync(List<Guid> ids)
+    {
+        if (ids == null || ids.Count == 0)
+            return 0;
+
+        return await _dbContext.Series
+            .Where(s => ids.Contains(s.Id))
+            .ExecuteDeleteAsync();
+    }
+
     public async Task DeleteSeriesBySlugAsync(string slug)
     {
         var series = _dbContext.Series.FirstOrDefault(s => s.Slug == slug);
