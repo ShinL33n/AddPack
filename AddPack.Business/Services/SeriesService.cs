@@ -2,6 +2,7 @@
 using AddPack.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Linq.Expressions;
 
 namespace AddPack.Business.Services;
 
@@ -13,7 +14,7 @@ public interface ISeriesService
     Task<IEnumerable<Series>> GetAllActiveSeriesAsync();
     Task<Series> CreateSeriesAsync(Series series);
     Task<Series> UpdateSeriesAsync(Series series);
-    Task<int> UpdateSelectedSeriesAsync(List<Guid> ids);
+    Task<int> UpdateSelectedSeriesPropertyAsync<TProperty>(List<Guid> ids, Expression<Func<Series, TProperty>> propertySelector, TProperty value);
 
     Task DeleteSeriesAsync(Guid id);
     Task DeleteSeriesBySlugAsync(string slug);
@@ -68,14 +69,17 @@ public class SeriesService : ISeriesService
         return series;
     }
 
-    public async Task<int> UpdateSelectedSeriesAsync(List<Guid> ids)
+    public async Task<int> UpdateSelectedSeriesPropertyAsync<TProperty>(
+        List<Guid> ids,
+        Expression<Func<Series, TProperty>> propertySelector,
+        TProperty value)
     {
         if(ids == null || ids.Count == 0)
             return 0;
 
         return await _dbContext.Series
             .Where(s => ids.Contains(s.Id))
-            .ExecuteUpdateAsync(setters => setters.SetProperty(s => s.IsActive, false));
+            .ExecuteUpdateAsync(setters => setters.SetProperty(propertySelector, value));
     }
 
     public async Task DeleteSeriesAsync(Guid id)

@@ -82,6 +82,28 @@ body {
         border-color: var(--ap-olive-light);
     }
 
+.btn-outline-disabled {
+    border-color: #808080;
+    color: #808080;
+}
+
+    .btn-outline-disabled:hover {
+        background-color: #8d8d8d;
+        border-color: #8d8d8d;
+        color: #cfcfcf;
+    }
+
+[data-bs-theme="dark"] .btn-outline-disabled {
+    border-color: #808080;
+    color: #808080;
+}
+
+    [data-bs-theme="dark"] .btn-outline-disabled:hover {
+        background-color: #212928;
+        border-color: #212928;
+        color: #808080;
+    }
+
 /* Badge w kolorze marki - licznik koszyka w navbarze, ale też np. etykieta
    "DEMO" / "Nowość" na kartach produktów. */
 .badge-ap {

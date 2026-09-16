@@ -235,12 +235,12 @@ public class SeriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Archive(Guid id)
+    public async Task<IActionResult> ArchiveRestore(Guid id)
     {
         var seriesToArchive = await _seriesService.GetSeriesByIdAsync(id);
         if(seriesToArchive != null)
         {
-            seriesToArchive.IsActive = false;
+            seriesToArchive.IsActive = !seriesToArchive.IsActive;
             await _seriesService.UpdateSeriesAsync(seriesToArchive);
         }
 
@@ -251,12 +251,26 @@ public class SeriesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ArchiveSelected(List<Guid> ids)
     {
-        int rowsAffected = await _seriesService.UpdateSelectedSeriesAsync(ids);
+        int rowsAffected = await _seriesService.UpdateSelectedSeriesPropertyAsync(ids, s => s.IsActive, false);
         
         if(rowsAffected > 0)
             TempData["Success"] = $"{rowsAffected} series archived successfully.";
         else
             TempData["Error"] = "No series were updated. Please try again.";
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> RestoreSelected(List<Guid> ids)
+    {
+        int rowsAffected = await _seriesService.UpdateSelectedSeriesPropertyAsync(ids, s => s.IsActive, true);
+
+        if (rowsAffected > 0)
+            TempData["Success"] = $"{rowsAffected} series restored successfully.";
+        else
+            TempData["Error"] = "No series were restored. Please try again.";
 
         return RedirectToAction(nameof(Index));
     }

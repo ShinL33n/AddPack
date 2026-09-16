@@ -268,7 +268,8 @@
 }
 
 .btn-select-all {
-    padding: 1rem .7rem;
+    padding: 1.2rem 0.9rem 1.2rem 0.7rem;
+    display: block;
 }
 
 @media (max-width: 360px) {
