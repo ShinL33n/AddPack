@@ -24,7 +24,7 @@
                     <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Dane serii</h5>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Create" method="post">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label fw-bold"></label>
                             <input asp-for="Name" class="form-control" placeholder="Wpisz nazwę serii" />
@@ -40,26 +40,50 @@
 
                         <div class="mb-3">
                             <label asp-for="Description" class="form-label fw-bold"></label>
-                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Opcjonalny opis serii"></textarea>
+                            <textarea asp-for="Description" class="form-control" rows="4" placeholder="Dodaj (opcjonalnie) opis serii."></textarea>
                             <span asp-validation-for="Description" class="text-danger small"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="SortOrder" class="form-label fw-bold"></label>
-                                <input asp-for="SortOrder" class="form-control" type="number" placeholder="0" />
+                                <input asp-for="SortOrder" class="form-control" type="number" placeholder="auto" />
                                 <span asp-validation-for="SortOrder" class="text-danger small"></span>
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        @* <div class="mb-3">
                             <label asp-for="Image" class="form-label fw-bold"></label>
                             <input asp-for="Image" class="form-control" placeholder="/images/series/nazwa.jpg" />
+                            
+                            <label for="seriesFile" class="form-label fw-bold"></label>
+                            <input type="file" class="form-control" id="seriesFile" name="file">
+                            
+                            <span asp-validation-for="Image" class="text-danger small"></span>
+                        </div> *@
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label fw-bold"></label>
+                            <div class="ap-dropzone" id="dropzone">
+                                <input type="file" asp-for="Image" id="fileInput" accept="image/*" class="d-none" />
+                                <div id="dropzoneContent" class="text-center p-4">
+                                    <i class="bi bi-cloud-arrow-up fs-1 d-block mb-2"></i>
+                                    <p class="mb-1">Przeciągnij zdjęcie tutaj lub <span class="text-decoration-underline">kliknij</span></p>
+                                    <small class="text-body-secondary">JPG, PNG, WEBP, GIF, max 5 MB</small>
+                                </div>
+                                <div class="imageWrapper">
+                                    <div class="imageControlls">
+                                        <img id="previewImg" class="d-none" alt="Podgląd zdjęcia" />
+                                        <button type="button" id="removeImageBtn" class="btn btn-sm btn-outline-danger d-none mt-2"><i class="bi bi-trash me-1"></i> Usuń</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fileError" class="text-danger small mt-2 d-none"></div>
                             <span asp-validation-for="Image" class="text-danger small"></span>
                         </div>
 
+
                         <div class="mb-4 form-check form-switch">
-                            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox"/>
                             <label asp-for="IsActive" class="form-check-label fw-bold">Seria aktywna</label>
                         </div>
 
@@ -67,6 +91,9 @@
                             <button type="submit" class="btn btn-ap-primary px-4">
                                 <i class="bi bi-check-lg me-1"></i> Zapisz zmiany
                             </button>
+                            <a asp-action="Index" class="btn btn-outline-danger shadow-sm">
+                                <i class="bi bi-x-lg me-1"></i> Anuluj
+                            </a>
                         </div>
                     </form>
                 </div>

@@ -186,4 +186,50 @@ body {
     }
 
 
+/* ==========================================================================
+   Drag & Drop
+   ========================================================================== */
+.ap-dropzone {
+    border: 2px dashed var(--bs-border-color);
+    border-radius: var(--bs-border-radius-lg);
+    background-color: var(--bs-body-bg);
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease;
+    text-align: center;
+    padding: 1rem;
+}
+
+    .ap-dropzone:hover,
+    .ap-dropzone.ap-dropzone-active {
+        border-color: var(--ap-olive);
+        background-color: var(--bs-secondary-bg);
+    }
+
+    .ap-dropzone #previewImg {
+        max-width: 100%;
+        max-height: 260px;
+        object-fit: contain;
+        border: 2px solid var(--bs-border-color);
+        background-color: var(--bs-body-bg);
+        border-radius: var(--bs-border-radius-lg);
+    }
+
+/*    .ap-dropzone #removeImageBtn {
+        position: absolute;
+        right: 0;
+        top: -0.6rem;
+        color: #b90808;
+    }*/
+
+    .ap-dropzone .imageWrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+        .ap-dropzone .imageWrapper .imageControlls {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
 

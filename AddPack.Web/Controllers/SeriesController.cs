@@ -1,8 +1,7 @@
 ﻿using AddPack.Business.Services;
-using AddPack.DataAccess.Data;
+using AddPack.Models.ViewModels;
 using AddPack.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AddPack.Web.Controllers;
 
@@ -33,38 +32,51 @@ public class SeriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Series series, IFormFile? file)
+    //public async Task<IActionResult> Create(Series series, IFormFile? file)
+    public async Task<IActionResult> Create(SeriesVM seriesVM)
     {
-        series.Id = Guid.NewGuid();
-        series.CreatedAt = DateTime.UtcNow;
+        Guid id = Guid.NewGuid();
+        DateTime createdAt = DateTime.UtcNow;
 
-        if (file != null)
-        {
-            series.Image = await AddImageAsync(file, series.Id, series.Name);
-        }
+        //if (file != null)
+        //{
+        //    series.Image = await AddImageAsync(file, series.Id, series.Name);
+        //}
 
-        if (series.SortOrder == null)
+        if (seriesVM.SortOrder == null)
         {
-            var maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
-            series.SortOrder = maxSortOrder + 1;
+            int maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
+            seriesVM.SortOrder = maxSortOrder + 1;
         }
 
         // Add validator
 
-        if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name))
+        if (!String.IsNullOrEmpty(seriesVM.Name) && !await _seriesService.IsNameUniqueAsync(seriesVM.Name))
         {
             ModelState.AddModelError("Name", "Seria o tej nazwie już istnieje.");
         }
 
-        if (!String.IsNullOrEmpty(series.Slug) && !await _seriesService.IsNameUniqueAsync(series.Slug))
+        if (!String.IsNullOrEmpty(seriesVM.Slug) && !await _seriesService.IsNameUniqueAsync(seriesVM.Slug))
         {
             ModelState.AddModelError("Slug", "Slug o tej nazwie już istnieje.");
         }
 
+        Series newSeries = new Series
+        {
+            Id = Guid.NewGuid(),
+            Name = seriesVM.Name,
+            Slug = seriesVM.Slug,
+            Description = seriesVM.Description,
+            IsActive = seriesVM.IsActive,
+            SortOrder = seriesVM.SortOrder,
+            CreatedAt = DateTime.UtcNow,
+            Image = seriesVM.Image != null ? await AddImageAsync(seriesVM.Image, id, seriesVM.Name) : null
+        };
+
         if (ModelState.IsValid)
         {
-            var seriesCreated = await _seriesService.CreateSeriesAsync(series);
-            TempData["Success"] = $"Seria {seriesCreated.Name} została utworzona pomyślnie.";
+            var seriesCreated = await _seriesService.CreateSeriesAsync(newSeries);
+            TempData["Success"] = $"Seria '{seriesCreated.Name}' została utworzona pomyślnie.";
 
             return RedirectToAction(nameof(Index));
         }
@@ -279,9 +291,11 @@ public class SeriesController : Controller
 
     public async Task<string> AddImageAsync(IFormFile file, Guid guid, string name)
     {
+        string createdAt = DateTime.UtcNow.ToShortDateString();
+
         string wwwRootPath = _webHostEnvironment.WebRootPath;
 
-        string fileName = guid.ToString() + "_" + name + Path.GetExtension(file.FileName);
+        string fileName = guid.ToString() + "_" + createdAt + "_" + name + Path.GetExtension(file.FileName);
         string seriesPath = Path.Combine("images", "series");
         string finalPath = Path.Combine(wwwRootPath, seriesPath);
 

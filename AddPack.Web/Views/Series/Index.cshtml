@@ -86,14 +86,14 @@
                                         form="archiveRestoreSeriesForm"
                                         onclick="document.getElementById('archiveRestoreSeriesFormId').value = '@item.Id';"
                                         class="btn btn-sm btn-outline-disabled"
-                                        style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 6rem">
+                                        style="border-top-left-radius: 0; border-bottom-left-radius: 0; width: 4rem">
                                     @if (item.IsActive)
                                     {
-                                        <i class="bi bi-x-circle" style="color: brown"></i> <span style="padding-left: 0.3rem">Wyłącz</span>
+                                        <span>Wyłącz</span>
                                     }
                                     else
                                     {
-                                        <i class="bi bi-check-circle" style="color: var(--ap-khaki)"></i> <span style="padding-left: 0.3rem">Włącz </span>
+                                        <span>Włącz</span>
                                     }
                                 </button>
                             </div>
@@ -194,14 +194,14 @@
                                     <button type="submit"
                                             form="archiveRestoreSeriesForm"
                                             onclick="document.getElementById('archiveRestoreSeriesFormId').value = '@item.Id';"
-                                            class="btn btn-sm btn-outline-disabled" style="width: 5.4rem">
+                                            class="btn btn-sm btn-outline-disabled" style="width: 4rem">
                                                 @if (item.IsActive)
                                                 {
-                                                    <i class="bi bi-x-circle" style="color: brown"></i> <span style="padding-left: 0.3rem">Wyłącz</span>
+                                                    <span>Wyłącz</span>
                                                 }
                                                 else
                                                 {
-                                                    <i class="bi bi-check-circle" style="color: var(--ap-khaki)"></i> <span style="padding-left: 0.3rem">Włącz </span>
+                                                    <span>Włącz</span>
                                                 }
                                     </button>
                                 </div>
@@ -210,7 +210,7 @@
                     }
                 </tbody>
                 </table>
-                </div>
+            </div>
         </div>
     }
     else
