@@ -1,0 +1,35 @@
+﻿@if(TempData["Success"] != null)
+{
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script>
+		toastr.success('@TempData["Success"]');
+	</script>
+}
+
+@if (TempData["Error"] != null)
+{
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script>
+		toastr.error('@TempData["Error"]');
+	</script>
+}
+
+@if (TempData["Info"] != null)
+{
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script>
+		toastr.info('@TempData["Info"]');
+	</script>
+}
+
+@if (TempData["Warning"] != null)
+{
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+	<script>
+		toastr.warning('@TempData["Warning"]');
+	</script>
+}

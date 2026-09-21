@@ -186,7 +186,7 @@ public class SeriesController : Controller
         if (ModelState.IsValid)
         {
             var seriesUpdated = await _seriesService.UpdateSeriesAsync(newSeries);
-            TempData["Success"] = $"Seria {seriesUpdated.Name} została pomyślnie zaktualizowana.";
+            TempData["Success"] = $"Seria '{seriesUpdated.Name}' została pomyślnie zaktualizowana.";
 
             return RedirectToAction(nameof(Index));
         }
@@ -218,7 +218,7 @@ public class SeriesController : Controller
     public async Task<IActionResult> DeletePOST(Guid id)
     {
         await _seriesService.DeleteSeriesAsync(id);
-        TempData["Success"] = "Series deleted successfully";
+        TempData["Success"] = "Seria została usunięta pomyślnie.";
         return RedirectToAction("Index");
     }
 
@@ -271,9 +271,9 @@ public class SeriesController : Controller
         int rowsAffected = await _seriesService.UpdateSelectedSeriesPropertyAsync(ids, s => s.IsActive, false);
         
         if(rowsAffected > 0)
-            TempData["Success"] = $"{rowsAffected} series archived successfully.";
+            TempData["Success"] = $"Zarchiwizowano {rowsAffected} {(rowsAffected < 5 ? "serie" : "serii")} pomyślnie.";
         else
-            TempData["Error"] = "No series were updated. Please try again.";
+            TempData["Error"] = "Nie zarchiwizowano żadnych serii. Proszę spróbować ponownie.";
 
         return RedirectToAction(nameof(Index));
     }
@@ -285,9 +285,9 @@ public class SeriesController : Controller
         int rowsAffected = await _seriesService.UpdateSelectedSeriesPropertyAsync(ids, s => s.IsActive, true);
 
         if (rowsAffected > 0)
-            TempData["Success"] = $"{rowsAffected} series restored successfully.";
+            TempData["Success"] = $"Przywrócono {rowsAffected} {(rowsAffected < 5 ? "serie" : "serii")} pomyślnie.";
         else
-            TempData["Error"] = "No series were restored. Please try again.";
+            TempData["Error"] = "Nie przywrócono żadnych serii. Proszę spróbować ponownie.";
 
         return RedirectToAction(nameof(Index));
     }
