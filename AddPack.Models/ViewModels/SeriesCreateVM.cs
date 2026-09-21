@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AddPack.Models.ViewModels;
 
-public class SeriesVM
+public class SeriesCreateVM
 {
     [Required]
     [Display(Name = "Nazwa serii")]

@@ -214,13 +214,6 @@ body {
         border-radius: var(--bs-border-radius-lg);
     }
 
-/*    .ap-dropzone #removeImageBtn {
-        position: absolute;
-        right: 0;
-        top: -0.6rem;
-        color: #b90808;
-    }*/
-
     .ap-dropzone .imageWrapper {
         display: flex;
         justify-content: center;

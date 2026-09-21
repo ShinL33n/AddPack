@@ -272,6 +272,13 @@
     display: block;
 }
 
+.preview-img {
+    border: 1px solid var(--bs-border-color);
+    display: block;
+    max-width: 260px;
+    min-width: 160px
+}
+
 @media (max-width: 360px) {
     .series-cards .series-actions .btn {
         min-width: 60px;

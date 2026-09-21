@@ -1,7 +1,7 @@
-﻿using AddPack.Business.Services;
-using AddPack.Models.ViewModels;
+﻿using AddPack.Models.ViewModels;
 using AddPack.Models;
 using Microsoft.AspNetCore.Mvc;
+using AddPack.Business.Services.IServices;
 
 namespace AddPack.Web.Controllers;
 
@@ -32,16 +32,10 @@ public class SeriesController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Create(Series series, IFormFile? file)
-    public async Task<IActionResult> Create(SeriesVM seriesVM)
+    public async Task<IActionResult> Create(SeriesCreateVM seriesVM)
     {
         Guid id = Guid.NewGuid();
         DateTime createdAt = DateTime.UtcNow;
-
-        //if (file != null)
-        //{
-        //    series.Image = await AddImageAsync(file, series.Id, series.Name);
-        //}
 
         if (seriesVM.SortOrder == null)
         {
@@ -148,39 +142,50 @@ public class SeriesController : Controller
             return NotFound();
         }
 
-        return View(series);
+        var seriesVM = new SeriesEditVM(series);
+
+        return View(seriesVM);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Series series, IFormFile? file)
+    public async Task<IActionResult> Edit(SeriesEditVM seriesVM)
     {
-        if (file != null)
-        {
-            series.Image = await AddImageAsync(file, series.Id, series.Name);
-        }
-
-        if (series.SortOrder == null)
+        if (seriesVM.SortOrder == null)
         {
             var maxSortOrder = await _seriesService.GetMaxSortOrderAsync();
-            series.SortOrder = maxSortOrder + 1;
+            seriesVM.SortOrder = maxSortOrder + 1;
         }
 
         // Add validator
 
-        if (!String.IsNullOrEmpty(series.Name) && !await _seriesService.IsNameUniqueAsync(series.Name, series.Id))
+        if (!String.IsNullOrEmpty(seriesVM.Name) && !await _seriesService.IsNameUniqueAsync(seriesVM.Name, seriesVM.Id))
         {
             ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
         }
 
-        if (!String.IsNullOrEmpty(series.Slug) && !await _seriesService.IsNameUniqueAsync(series.Slug, series.Id))
+        if (!String.IsNullOrEmpty(seriesVM.Slug) && !await _seriesService.IsNameUniqueAsync(seriesVM.Slug, seriesVM.Id))
         {
             ModelState.AddModelError("", "Slug o tej nazwie już istnieje.");
         }
 
+        Series newSeries = new Series
+        {
+            Id = seriesVM.Id,
+            Name = seriesVM.Name,
+            Slug = seriesVM.Slug,
+            Description = seriesVM.Description,
+            IsActive = seriesVM.IsActive,
+            SortOrder = seriesVM.SortOrder,
+            CreatedAt = seriesVM.CreatedAt,
+            Image = seriesVM.NewImage != null ? await AddImageAsync(seriesVM.NewImage, seriesVM.Id, seriesVM.Name) : seriesVM.Image
+        };
+
+        if(seriesVM.NewImage != null) await DeleteImageAsync(seriesVM.Image);
+
         if (ModelState.IsValid)
         {
-            var seriesUpdated = await _seriesService.UpdateSeriesAsync(series);
+            var seriesUpdated = await _seriesService.UpdateSeriesAsync(newSeries);
             TempData["Success"] = $"Seria {seriesUpdated.Name} została pomyślnie zaktualizowana.";
 
             return RedirectToAction(nameof(Index));
@@ -291,7 +296,7 @@ public class SeriesController : Controller
 
     public async Task<string> AddImageAsync(IFormFile file, Guid guid, string name)
     {
-        string createdAt = DateTime.UtcNow.ToShortDateString();
+        string createdAt = DateTime.UtcNow.ToString().Replace(" ", "_").Replace(":","_");
 
         string wwwRootPath = _webHostEnvironment.WebRootPath;
 
@@ -310,5 +315,20 @@ public class SeriesController : Controller
         }
 
         return Path.Combine(@"\", seriesPath, fileName).Replace("\\", "/");
+    }
+
+    public async Task DeleteImageAsync(string? filePath)
+    {
+        if (filePath != null)
+        {
+            string wwwRootPath = _webHostEnvironment.WebRootPath;
+            string finalPath = Path.Combine(wwwRootPath, filePath[1..].Replace("/","\\"));
+
+            var filePathInfo = new FileInfo(finalPath);
+            if (filePathInfo.Exists)
+            {
+                filePathInfo.Delete();
+            }
+        }
     }
 }

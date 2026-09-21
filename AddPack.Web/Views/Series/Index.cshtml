@@ -232,12 +232,10 @@
         const checkboxes = document.querySelectorAll('input[name="ids"]');
         const icon = this;
 
-        // sprawdź, czy wszystkie są już zaznaczone -> jeśli tak, odznacz wszystkie (toggle)
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
 
         checkboxes.forEach(cb => cb.checked = !allChecked);
 
-        // podmień ikonę zgodnie z nowym stanem
         icon.classList.toggle('bi-square', allChecked);
         icon.classList.toggle('bi-check-square', !allChecked);
     });

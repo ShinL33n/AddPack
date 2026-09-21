@@ -1,5 +1,4 @@
-﻿@* @model AddPack.Models.ViewModels.SeriesCreateVM *@
-@model AddPack.Models.Series
+﻿@model AddPack.Models.ViewModels.SeriesCreateVM
 
 @{
     ViewData["Title"] = "Utwórz serię";
@@ -52,15 +51,6 @@
                             </div>
                         </div>
 
-                        @* <div class="mb-3">
-                            <label asp-for="Image" class="form-label fw-bold"></label>
-                            <input asp-for="Image" class="form-control" placeholder="/images/series/nazwa.jpg" />
-                            
-                            <label for="seriesFile" class="form-label fw-bold"></label>
-                            <input type="file" class="form-control" id="seriesFile" name="file">
-                            
-                            <span asp-validation-for="Image" class="text-danger small"></span>
-                        </div> *@
                         <div class="mb-3">
                             <label asp-for="Image" class="form-label fw-bold"></label>
                             <div class="ap-dropzone" id="dropzone">

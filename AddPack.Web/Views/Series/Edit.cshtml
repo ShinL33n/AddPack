@@ -1,4 +1,4 @@
-﻿@model AddPack.Models.Series
+﻿@model AddPack.Models.ViewModels.SeriesEditVM
 
 @{
     ViewData["Title"] = "Edytuj serię";
@@ -23,9 +23,10 @@
                     <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Dane serii</h5>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Edit" method="post">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data" >
                         <input type="hidden" asp-for="Id" />
                         <input type="hidden" asp-for="CreatedAt" />
+                        <input type="hidden" asp-for="Image" />
 
                         <div class="mb-3">
                             <label asp-for="Name" class="form-label fw-bold"></label>
@@ -53,10 +54,33 @@
                             </div>
                         </div>
 
+                        @if (Model.Image != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="Image" class="form-label fw-bold"></label>
+                                <img src="@Model.Image" class="rounded-2 preview-img" alt="Podgląd zdjęcia" />
+                                <span asp-validation-for="Image" class="text-danger small"></span>
+                            </div>
+                        }
+
                         <div class="mb-3">
-                            <label asp-for="Image" class="form-label fw-bold"></label>
-                            <input asp-for="Image" class="form-control" placeholder="/images/series/nazwa.jpg" />
-                            <span asp-validation-for="Image" class="text-danger small"></span>
+                            <label asp-for="NewImage" class="form-label fw-bold"></label>
+                            <div class="ap-dropzone" id="dropzone">
+                                <input type="file" asp-for="NewImage" id="fileInput" accept="image/*" class="d-none" />
+                                <div id="dropzoneContent" class="text-center p-4">
+                                    <i class="bi bi-cloud-arrow-up fs-1 d-block mb-2"></i>
+                                    <p class="mb-1">Przeciągnij zdjęcie tutaj lub <span class="text-decoration-underline">kliknij</span></p>
+                                    <small class="text-body-secondary">JPG, PNG, WEBP, GIF, max 5 MB</small>
+                                </div>
+                                <div class="imageWrapper">
+                                    <div class="imageControlls">
+                                        <img id="previewImg" class="d-none" alt="Podgląd zdjęcia" />
+                                        <button type="button" id="removeImageBtn" class="btn btn-sm btn-outline-danger d-none mt-2"><i class="bi bi-trash me-1"></i> Usuń</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="fileError" class="text-danger small mt-2 d-none"></div>
+                            <span asp-validation-for="NewImage" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4 form-check form-switch">
