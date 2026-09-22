@@ -7,10 +7,159 @@ namespace AddPack.DataAccess.Data
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Series> Series { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // SEED INITIAL DATA FOR SERIES
+            var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            // Kategorie nadrzędne
+            var inneId = Guid.Parse("00000000-0000-0000-0000-00000000000");
+            var namiotyId = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            var plecakiId = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            var odziezId = Guid.Parse("33333333-3333-3333-3333-333333333333");
+            var kuchniaId = Guid.Parse("44444444-4444-4444-4444-444444444444");
+
+            modelBuilder.Entity<Category>().HasData(
+                // --- Kategorie główne ---
+                new Category
+                {
+                    Id = inneId,
+                    ParentId = null,
+                    Name = "Inne",
+                    Description = "Inne.",
+                    Slug = "inne",
+                    IsActive = true,
+                    SortOrder = 0,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = namiotyId,
+                    ParentId = null,
+                    Name = "Namioty",
+                    Description = "Namioty turystyczne i bushcraftowe na każdą pogodę.",
+                    Slug = "namioty",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = plecakiId,
+                    ParentId = null,
+                    Name = "Plecaki",
+                    Description = "Plecaki trekkingowe i miejskie w budżetowych cenach.",
+                    Slug = "plecaki",
+                    IsActive = true,
+                    SortOrder = 2,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = odziezId,
+                    ParentId = null,
+                    Name = "Odzież outdoorowa",
+                    Description = "Odzież funkcjonalna do aktywności na świeżym powietrzu.",
+                    Slug = "odziez-outdoorowa",
+                    IsActive = true,
+                    SortOrder = 3,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = kuchniaId,
+                    ParentId = null,
+                    Name = "Kuchnia turystyczna",
+                    Description = "Kuchenki, naczynia i akcesoria do gotowania w terenie.",
+                    Slug = "kuchnia-turystyczna",
+                    IsActive = true,
+                    SortOrder = 4,
+                    CreatedAt = seedDate
+                },
+
+                // --- Subkategorie: Namioty ---
+                new Category
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111112"),
+                    ParentId = namiotyId,
+                    Name = "Namioty 1-osobowe",
+                    Description = "Lekkie namioty solo do szybkich wypraw.",
+                    Slug = "namioty-1-osobowe",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111113"),
+                    ParentId = namiotyId,
+                    Name = "Namioty rodzinne",
+                    Description = "Przestronne namioty dla 4-6 osób.",
+                    Slug = "namioty-rodzinne",
+                    IsActive = true,
+                    SortOrder = 2,
+                    CreatedAt = seedDate
+                },
+
+                // --- Subkategorie: Plecaki ---
+                new Category
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    ParentId = plecakiId,
+                    Name = "Plecaki trekkingowe",
+                    Description = "Plecaki 40-65L na wielodniowe wyprawy.",
+                    Slug = "plecaki-trekkingowe",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222224"),
+                    ParentId = plecakiId,
+                    Name = "Plecaki miejskie",
+                    Description = "Codzienne plecaki do miasta i na uczelnię.",
+                    Slug = "plecaki-miejskie",
+                    IsActive = false, // przykład nieaktywnej kategorii
+                    SortOrder = 2,
+                    CreatedAt = seedDate
+                },
+
+                // --- Subkategorie: Odzież ---
+                new Category
+                {
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333334"),
+                    ParentId = odziezId,
+                    Name = "Kurtki przeciwdeszczowe",
+                    Description = "Kurtki membranowe odporne na deszcz i wiatr.",
+                    Slug = "kurtki-przeciwdeszczowe",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
+                },
+
+                // --- Subkategorie: Kuchnia turystyczna ---
+                new Category
+                {
+                    Id = Guid.Parse("44444444-4444-4444-4444-444444444445"),
+                    ParentId = kuchniaId,
+                    Name = "Kuchenki gazowe",
+                    Description = "Kompaktowe kuchenki turystyczne na kartusze gazowe.",
+                    Slug = "kuchenki-gazowe",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
+                }
+            );
+
+            modelBuilder.Entity<Category>()
+                .HasIndex(s => s.Slug)
+                .IsUnique();
+
 
             // SEED INITIAL DATA FOR SERIES
             modelBuilder.Entity<Series>().HasData(

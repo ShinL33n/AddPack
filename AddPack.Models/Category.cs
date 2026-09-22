@@ -23,9 +23,6 @@ public class Category
     [Display(Name = "Slug (link)")]
     public string Slug { get; set; } = string.Empty;
 
-    [Display(Name = "Ikona serii")]
-    public string? Image { get; set; }
-
     [Required]
     [Display(Name = "Kategoria aktywna")]
     public bool IsActive { get; set; }
