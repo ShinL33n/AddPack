@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AddPack.Business.Services.IServices;
+using AddPack.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AddPack.Web.Controllers;
 
@@ -17,8 +19,40 @@ public class CategoryController : Controller
     // - Wyłączenie kategorii wyłącza także subkategorie i przedmioty z nią powiązane
     // - Wyłączone kategorie i przedmioty nie są widoczne w witrynie, ani dostępne dla zwykłego użytkownika
 
-    public IActionResult Index()
+    private readonly ICategoryService _categoryService;
+
+    public CategoryController(ICategoryService categoryService)
     {
-        return View();
+        _categoryService = categoryService;
     }
+    public async Task<IActionResult> Index()
+    {
+        var categories = await _categoryService.GetAllCategoriesAsync();
+
+        return View(categories);
+    }
+
+
+
+    #region API_CALLS
+
+    public async Task<IActionResult> GetAllCategories()
+    {
+        var categories = await _categoryService.GetAllCategoriesAsync();
+        List<CategoryTableDTO> categoryDtos = categories.Select(c => new CategoryTableDTO
+        {
+            Id = c.Id,
+            ParentId = c.ParentId,
+            Name = c.Name,
+            Description = c.Description,
+            Slug = c.Slug,
+            IsActive = c.IsActive,
+            SortOrder = c.SortOrder,
+            CreatedAt = c.CreatedAt
+        }).ToList();
+
+        return Json(new { data = categoryDtos });
+    }
+
+    #endregion
 }

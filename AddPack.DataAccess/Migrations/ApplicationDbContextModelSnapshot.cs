@@ -35,9 +35,6 @@ namespace AddPack.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -50,7 +47,7 @@ namespace AddPack.DataAccess.Migrations
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("SortOrder")
                         .HasColumnType("int");
@@ -59,49 +56,127 @@ namespace AddPack.DataAccess.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Category");
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("00000000-0000-0000-0000-000000000001"),
-                            CreatedAt = new DateTime(2026, 8, 24, 22, 18, 10, 0, DateTimeKind.Utc),
-                            Description = "Kategoria dla produktów, które nie pasują do innych kategorii.",
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Inne.",
                             IsActive = true,
                             Name = "Inne",
                             Slug = "inne",
+                            SortOrder = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Namioty turystyczne i bushcraftowe na każdą pogodę.",
+                            IsActive = true,
+                            Name = "Namioty",
+                            Slug = "namioty",
                             SortOrder = 1
                         },
                         new
                         {
-                            Id = new Guid("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
-                            CreatedAt = new DateTime(2026, 8, 24, 22, 18, 15, 0, DateTimeKind.Utc),
-                            Description = "Zestawy tworzące kompletną ofertę produktów.",
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Plecaki trekkingowe i miejskie w budżetowych cenach.",
                             IsActive = true,
-                            Name = "Zestawy",
-                            Slug = "zestawy",
+                            Name = "Plecaki",
+                            Slug = "plecaki",
                             SortOrder = 2
                         },
                         new
                         {
-                            Id = new Guid("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
-                            CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, 0, DateTimeKind.Utc),
-                            Description = "Palniki do gotowania na świeżym powietrzu.",
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Odzież funkcjonalna do aktywności na świeżym powietrzu.",
                             IsActive = true,
-                            Name = "Palniki",
-                            Slug = "palniki",
+                            Name = "Odzież outdoorowa",
+                            Slug = "odziez-outdoorowa",
                             SortOrder = 3
                         },
                         new
                         {
-                            Id = new Guid("e4a91c37-52f8-4b06-a913-7c2d5e8f6041"),
-                            CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, 0, DateTimeKind.Utc),
-                            Description = "Palniki do gotowania na świeżym powietrzu.",
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kuchenki, naczynia i akcesoria do gotowania w terenie.",
                             IsActive = true,
-                            Name = "Palniki alkoholowe",
-                            ParentId = new Guid("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
-                            Slug = "palniki-alkoholowe",
+                            Name = "Kuchnia turystyczna",
+                            Slug = "kuchnia-turystyczna",
                             SortOrder = 4
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111112"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Lekkie namioty solo do szybkich wypraw.",
+                            IsActive = true,
+                            Name = "Namioty 1-osobowe",
+                            ParentId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Slug = "namioty-1-osobowe",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111113"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Przestronne namioty dla 4-6 osób.",
+                            IsActive = true,
+                            Name = "Namioty rodzinne",
+                            ParentId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Slug = "namioty-rodzinne",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222223"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Plecaki 40-65L na wielodniowe wyprawy.",
+                            IsActive = true,
+                            Name = "Plecaki trekkingowe",
+                            ParentId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Slug = "plecaki-trekkingowe",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222224"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Codzienne plecaki do miasta i na uczelnię.",
+                            IsActive = false,
+                            Name = "Plecaki miejskie",
+                            ParentId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Slug = "plecaki-miejskie",
+                            SortOrder = 2
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333334"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kurtki membranowe odporne na deszcz i wiatr.",
+                            IsActive = true,
+                            Name = "Kurtki przeciwdeszczowe",
+                            ParentId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Slug = "kurtki-przeciwdeszczowe",
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444445"),
+                            CreatedAt = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kompaktowe kuchenki turystyczne na kartusze gazowe.",
+                            IsActive = true,
+                            Name = "Kuchenki gazowe",
+                            ParentId = new Guid("44444444-4444-4444-4444-444444444444"),
+                            Slug = "kuchenki-gazowe",
+                            SortOrder = 1
                         });
                 });
 
@@ -158,7 +233,7 @@ namespace AddPack.DataAccess.Migrations
                         {
                             Id = new Guid("8f3b2d65-17c9-4a82-be31-6d5e7c9042fa"),
                             Brand = "AddPack",
-                            CategoryId = new Guid("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
+                            CategoryId = new Guid("00000000-0000-0000-0000-000000000001"),
                             CreatedAt = new DateTime(2026, 8, 24, 22, 18, 50, 0, DateTimeKind.Utc),
                             Description = "Zestaw do gotowania na świeżym powietrzu. Składa się z osłony przeciwwiatrowej pełniącej funkcję uchwytu na garnek, palnika alkoholowego, garnka do gotowania, pokrywek do gotowania i wkładki do garnka na akcesoria. Idealny do biwakowania i turystyki pieszej.",
                             IsActive = true,
@@ -339,12 +414,15 @@ namespace AddPack.DataAccess.Migrations
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("SortOrder")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("Series");
 

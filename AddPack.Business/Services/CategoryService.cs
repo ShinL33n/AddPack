@@ -1,34 +1,10 @@
-﻿using AddPack.DataAccess.Data;
+﻿using AddPack.Business.Services.IServices;
+using AddPack.DataAccess.Data;
 using AddPack.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace AddPack.Business.Services;
 
-public interface ICategoryService
-{
-    // Get
-    Task<Category?> GetCategoryByIdAsync(Guid id);
-    Task<IEnumerable<Category>> GetAllCategoriesAsync();
-
-    // Create
-    Task<Category> CreateCategoryAsync(Category category);
-
-    // Update
-    Task<Category> UpdateCategoryAsync(Category category);
-    Task<int> UpdateCategoriesActiveStatusAsync(List<Guid> ids, bool value);
-
-    // Delete
-    Task<int> DeleteCategoriesAsync(List<Guid> ids);
-
-    // Utils
-    Task<int> GetMaxSortOrderAsync();
-    Task<bool> IsNameUniqueAsync(string name, Guid? id = null);
-
-}
 
 public class CategoryService : ICategoryService
 {
@@ -76,22 +52,67 @@ public class CategoryService : ICategoryService
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
         try
         {
-            // !!Będzie działać tylko dla 1 poziomu w dół, zmienić na dowolną ilość poziomów!!
-            
-            // Znajdź kategorie, które mają rodzica,
-            // który jest wśród kategorii do aktualizacji
-            // lub same są wśród kategorii do aktualizacji
-            await _dbContext.Categories
-                .Where(c => c.ParentId.HasValue
-                            && ids.Contains(c.ParentId.Value)
-                            || ids.Contains(c.Id))
+            /* Wersja z zapytaniami do bazy w pętli, ale bez pobierania wszystkich kategorii do pamięci
+            // Stwórz listę id kategorii do aktualizacji,
+            // która później będzie aktualizowana w iteracji
+            List<Guid> idsToUpdate = [.. ids.Distinct()], currentLevelIds = [.. ids.Distinct()];
+
+            while (currentLevelIds.Count > 0)
+            {
+                // Znajdź wszystkie kategorie, które mają rodzica wśród kategorii do aktualizacji oraz same nie są
+                // wśród początkowej listy kategorii do aktualizacji
+                var childCategories = await _dbContext.Categories
+                    .Where(c => c.ParentId.HasValue && currentLevelIds.Contains(c.ParentId.Value) && !ids.Contains(c.Id))
+                    .Select(c => c.Id)
+                    .ToListAsync();
+
+                idsToUpdate.AddRange(childCategories); // can i "add" nullable here?
+                currentLevelIds = childCategories;
+            }
+
+            var updatedCount = await _dbContext.Categories
+                .Where(c => idsToUpdate.Contains(c.Id))
                 .ExecuteUpdateAsync(setters => setters.SetProperty(c => c.IsActive, value));
 
-            await _dbContext.Products
-                .Where(p => ids.Contains(p.CategoryId))
+            await transaction.CommitAsync();
+            return updatedCount; */
+
+            var allCategories = await _dbContext.Categories
+                .Select(c => new { c.Id, c.ParentId })
+                .ToListAsync();
+
+            // Zbuduj mapę rodzic -> dzieci, żeby przeszukiwanie było O(1) per węzeł
+            var childrenByParent = allCategories
+                .Where(c => c.ParentId.HasValue)
+                .GroupBy(c => c.ParentId!.Value)
+                .ToDictionary(g => g.Key, g => g.Select(c => c.Id).ToList());
+
+            // BFS całkowicie w pamięci — zero zapytań do bazy w tej pętli
+            var idsToUpdate = new List<Guid>(ids.Distinct());
+            var currentLevelIds = new List<Guid>(ids.Distinct());
+
+            while (currentLevelIds.Count > 0)
+            {
+                var nextLevelIds = currentLevelIds
+                    .SelectMany(parentId => childrenByParent[parentId])
+                    .Where(childId => !idsToUpdate.Contains(childId))
+                    .ToList();
+
+                idsToUpdate.AddRange(nextLevelIds);
+                currentLevelIds = nextLevelIds;
+            }
+
+            // Jedno zapytanie: finalny update na całym zebranym zbiorze
+            int updatedCategoriesCount = await _dbContext.Categories
+                .Where(c => idsToUpdate.Contains(c.Id))
+                .ExecuteUpdateAsync(setters => setters.SetProperty(c => c.IsActive, value));
+
+            int updatedProductsCount = await _dbContext.Products
+                .Where(p => idsToUpdate.Contains(p.CategoryId))
                 .ExecuteUpdateAsync(setters => setters.SetProperty(p => p.IsActive, value));
 
-
+            await transaction.CommitAsync();
+            return updatedCategoriesCount;
         }
         catch
         {
@@ -144,14 +165,23 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public Task<int> GetMaxSortOrderAsync()
+    public async Task<int> GetMaxSortOrderAsync(Guid? parentId = null)
     {
-        throw new NotImplementedException();
+        return parentId.HasValue ?
+            await _dbContext.Categories.Where(c => c.ParentId == parentId).MaxAsync(c => (int?)c.SortOrder) ?? 0 :
+            await _dbContext.Categories.Where(c => c.ParentId == null).MaxAsync(c => (int?)c.SortOrder) ?? 0;
     }
 
-    public Task<bool> IsNameUniqueAsync(string name, Guid? id = null)
+    public async Task<bool> IsNameUniqueAsync(string name, Guid? id = null)
     {
-        throw new NotImplementedException();
+        if (id.HasValue)
+        {
+            return !await _dbContext.Categories.AnyAsync(c => c.Name == name && c.Id != id.Value);
+        }
+        else
+        {
+            return !await _dbContext.Categories.AnyAsync(c => c.Name == name);
+        }
     }
 
     private Guid GetDefaultCategoryId()

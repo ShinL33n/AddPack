@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AddPack.DataAccess.Data.ApplicationDbContext>(opti
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ISeriesService, SeriesService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 

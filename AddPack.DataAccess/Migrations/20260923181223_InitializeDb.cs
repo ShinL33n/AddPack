@@ -8,32 +8,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AddPack.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDatabase : Migration
+    public partial class InitializeDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Category",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     SortOrder = table.Column<int>(type: "int", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Category", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Category_Category_ParentId",
+                        name: "FK_Categories_Categories_ParentId",
                         column: x => x.ParentId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -44,7 +43,7 @@ namespace AddPack.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
@@ -76,9 +75,9 @@ namespace AddPack.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Products_Category_CategoryId",
+                        name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "Category",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -146,13 +145,15 @@ namespace AddPack.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Category",
-                columns: new[] { "Id", "CreatedAt", "Description", "Image", "IsActive", "Name", "ParentId", "Slug", "SortOrder" },
+                table: "Categories",
+                columns: new[] { "Id", "CreatedAt", "Description", "IsActive", "Name", "ParentId", "Slug", "SortOrder" },
                 values: new object[,]
                 {
-                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2026, 8, 24, 22, 18, 10, 0, DateTimeKind.Utc), "Kategoria dla produktów, które nie pasują do innych kategorii.", null, true, "Inne", null, "inne", 1 },
-                    { new Guid("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"), new DateTime(2026, 8, 24, 22, 18, 15, 0, DateTimeKind.Utc), "Zestawy tworzące kompletną ofertę produktów.", null, true, "Zestawy", null, "zestawy", 2 },
-                    { new Guid("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"), new DateTime(2026, 8, 24, 22, 18, 20, 0, DateTimeKind.Utc), "Palniki do gotowania na świeżym powietrzu.", null, true, "Palniki", null, "palniki", 3 }
+                    { new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Inne.", true, "Inne", null, "inne", 0 },
+                    { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Namioty turystyczne i bushcraftowe na każdą pogodę.", true, "Namioty", null, "namioty", 1 },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Plecaki trekkingowe i miejskie w budżetowych cenach.", true, "Plecaki", null, "plecaki", 2 },
+                    { new Guid("33333333-3333-3333-3333-333333333333"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Odzież funkcjonalna do aktywności na świeżym powietrzu.", true, "Odzież outdoorowa", null, "odziez-outdoorowa", 3 },
+                    { new Guid("44444444-4444-4444-4444-444444444444"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Kuchenki, naczynia i akcesoria do gotowania w terenie.", true, "Kuchnia turystyczna", null, "kuchnia-turystyczna", 4 }
                 });
 
             migrationBuilder.InsertData(
@@ -168,14 +169,22 @@ namespace AddPack.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Category",
-                columns: new[] { "Id", "CreatedAt", "Description", "Image", "IsActive", "Name", "ParentId", "Slug", "SortOrder" },
-                values: new object[] { new Guid("e4a91c37-52f8-4b06-a913-7c2d5e8f6041"), new DateTime(2026, 8, 24, 22, 18, 20, 0, DateTimeKind.Utc), "Palniki do gotowania na świeżym powietrzu.", null, true, "Palniki alkoholowe", new Guid("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"), "palniki-alkoholowe", 4 });
+                table: "Categories",
+                columns: new[] { "Id", "CreatedAt", "Description", "IsActive", "Name", "ParentId", "Slug", "SortOrder" },
+                values: new object[,]
+                {
+                    { new Guid("11111111-1111-1111-1111-111111111112"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Lekkie namioty solo do szybkich wypraw.", true, "Namioty 1-osobowe", new Guid("11111111-1111-1111-1111-111111111111"), "namioty-1-osobowe", 1 },
+                    { new Guid("11111111-1111-1111-1111-111111111113"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Przestronne namioty dla 4-6 osób.", true, "Namioty rodzinne", new Guid("11111111-1111-1111-1111-111111111111"), "namioty-rodzinne", 2 },
+                    { new Guid("22222222-2222-2222-2222-222222222223"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Plecaki 40-65L na wielodniowe wyprawy.", true, "Plecaki trekkingowe", new Guid("22222222-2222-2222-2222-222222222222"), "plecaki-trekkingowe", 1 },
+                    { new Guid("22222222-2222-2222-2222-222222222224"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Codzienne plecaki do miasta i na uczelnię.", false, "Plecaki miejskie", new Guid("22222222-2222-2222-2222-222222222222"), "plecaki-miejskie", 2 },
+                    { new Guid("33333333-3333-3333-3333-333333333334"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Kurtki membranowe odporne na deszcz i wiatr.", true, "Kurtki przeciwdeszczowe", new Guid("33333333-3333-3333-3333-333333333333"), "kurtki-przeciwdeszczowe", 1 },
+                    { new Guid("44444444-4444-4444-4444-444444444445"), new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Kompaktowe kuchenki turystyczne na kartusze gazowe.", true, "Kuchenki gazowe", new Guid("44444444-4444-4444-4444-444444444444"), "kuchenki-gazowe", 1 }
+                });
 
             migrationBuilder.InsertData(
                 table: "Products",
                 columns: new[] { "Id", "Brand", "CategoryId", "CreatedAt", "Description", "IsActive", "IsFeatured", "Name", "SeriesId", "Slug", "UpdatedAt" },
-                values: new object[] { new Guid("8f3b2d65-17c9-4a82-be31-6d5e7c9042fa"), "AddPack", new Guid("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"), new DateTime(2026, 8, 24, 22, 18, 50, 0, DateTimeKind.Utc), "Zestaw do gotowania na świeżym powietrzu. Składa się z osłony przeciwwiatrowej pełniącej funkcję uchwytu na garnek, palnika alkoholowego, garnka do gotowania, pokrywek do gotowania i wkładki do garnka na akcesoria. Idealny do biwakowania i turystyki pieszej.", true, true, "Zestaw do gotowania", new Guid("3f2504e0-4f89-41d3-9a0c-0305e82c3301"), "zestaw-do-gotowania", new DateTime(2026, 8, 24, 22, 18, 58, 0, DateTimeKind.Utc) });
+                values: new object[] { new Guid("8f3b2d65-17c9-4a82-be31-6d5e7c9042fa"), "AddPack", new Guid("00000000-0000-0000-0000-000000000001"), new DateTime(2026, 8, 24, 22, 18, 50, 0, DateTimeKind.Utc), "Zestaw do gotowania na świeżym powietrzu. Składa się z osłony przeciwwiatrowej pełniącej funkcję uchwytu na garnek, palnika alkoholowego, garnka do gotowania, pokrywek do gotowania i wkładki do garnka na akcesoria. Idealny do biwakowania i turystyki pieszej.", true, true, "Zestaw do gotowania", new Guid("3f2504e0-4f89-41d3-9a0c-0305e82c3301"), "zestaw-do-gotowania", new DateTime(2026, 8, 24, 22, 18, 58, 0, DateTimeKind.Utc) });
 
             migrationBuilder.InsertData(
                 table: "ProductVariant",
@@ -192,9 +201,15 @@ namespace AddPack.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Category_ParentId",
-                table: "Category",
+                name: "IX_Categories_ParentId",
+                table: "Categories",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Slug",
+                table: "Categories",
+                column: "Slug",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductImage_ProductVariantId",
@@ -215,6 +230,12 @@ namespace AddPack.DataAccess.Migrations
                 name: "IX_ProductVariant_ProductId",
                 table: "ProductVariant",
                 column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Series_Slug",
+                table: "Series",
+                column: "Slug",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -230,7 +251,7 @@ namespace AddPack.DataAccess.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Category");
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Series");

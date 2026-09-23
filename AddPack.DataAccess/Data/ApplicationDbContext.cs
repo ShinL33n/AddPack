@@ -17,11 +17,11 @@ namespace AddPack.DataAccess.Data
             var seedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             // Kategorie nadrzędne
-            var inneId = Guid.Parse("00000000-0000-0000-0000-00000000000");
-            var namiotyId = Guid.Parse("11111111-1111-1111-1111-111111111111");
-            var plecakiId = Guid.Parse("22222222-2222-2222-2222-222222222222");
-            var odziezId = Guid.Parse("33333333-3333-3333-3333-333333333333");
-            var kuchniaId = Guid.Parse("44444444-4444-4444-4444-444444444444");
+            var inneId      = Guid.Parse("00000000-0000-0000-0000-000000000001");
+            var namiotyId   = Guid.Parse("11111111-1111-1111-1111-111111111111");
+            var plecakiId   = Guid.Parse("22222222-2222-2222-2222-222222222222");
+            var odziezId    = Guid.Parse("33333333-3333-3333-3333-333333333333");
+            var kuchniaId   = Guid.Parse("44444444-4444-4444-4444-444444444444");
 
             modelBuilder.Entity<Category>().HasData(
                 // --- Kategorie główne ---
@@ -160,6 +160,13 @@ namespace AddPack.DataAccess.Data
                 .HasIndex(s => s.Slug)
                 .IsUnique();
 
+            // configure the self-referencing relationship for Category
+            modelBuilder.Entity<Category>()
+                        .HasOne(c => c.CategoryParent)
+                        .WithMany(c => c.Subcategories)
+                        .HasForeignKey(k => k.ParentId)
+                        .OnDelete(DeleteBehavior.Restrict);
+
 
             // SEED INITIAL DATA FOR SERIES
             modelBuilder.Entity<Series>().HasData(
@@ -225,60 +232,60 @@ namespace AddPack.DataAccess.Data
                 .IsUnique();
 
 
-            // SEED INITIAL DATA FOR CATEGORIES
-            modelBuilder.Entity<Category>().HasData(
-                new Category
-                {
-                    Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
-                    Name = "Inne",
-                    Slug = "inne",
-                    Description = "Kategoria dla produktów, które nie pasują do innych kategorii.",
-                    ParentId = null,
-                    IsActive = true,
-                    SortOrder = 1,
-                    CreatedAt = new DateTime(2026, 8, 24, 22, 18, 10, DateTimeKind.Utc)
-                },
-                new Category
-                {
-                    Id = Guid.Parse("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
-                    Name = "Zestawy",
-                    Slug = "zestawy",
-                    Description = "Zestawy tworzące kompletną ofertę produktów.",
-                    ParentId = null,
-                    IsActive = true,
-                    SortOrder = 2,
-                    CreatedAt = new DateTime(2026, 8, 24, 22, 18, 15, DateTimeKind.Utc)
-                },
-                new Category
-                {
-                    Id = Guid.Parse("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
-                    Name = "Palniki",
-                    Slug = "palniki",
-                    Description = "Palniki do gotowania na świeżym powietrzu.",
-                    ParentId = null,
-                    IsActive = true,
-                    SortOrder = 3,
-                    CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, DateTimeKind.Utc)
-                },
-                new Category
-                {
-                    Id = Guid.Parse("e4a91c37-52f8-4b06-a913-7c2d5e8f6041"),
-                    Name = "Palniki alkoholowe",
-                    Slug = "palniki-alkoholowe",
-                    Description = "Palniki do gotowania na świeżym powietrzu.",
-                    ParentId = Guid.Parse("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
-                    IsActive = true,
-                    SortOrder = 4,
-                    CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, DateTimeKind.Utc),
-                }
-            );
+            //// SEED INITIAL DATA FOR CATEGORIES
+            //modelBuilder.Entity<Category>().HasData(
+            //    new Category
+            //    {
+            //        Id = Guid.Parse("00000000-0000-0000-0000-000000000001"),
+            //        Name = "Inne",
+            //        Slug = "inne",
+            //        Description = "Kategoria dla produktów, które nie pasują do innych kategorii.",
+            //        ParentId = null,
+            //        IsActive = true,
+            //        SortOrder = 1,
+            //        CreatedAt = new DateTime(2026, 8, 24, 22, 18, 10, DateTimeKind.Utc)
+            //    },
+            //    new Category
+            //    {
+            //        Id = Guid.Parse("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
+            //        Name = "Zestawy",
+            //        Slug = "zestawy",
+            //        Description = "Zestawy tworzące kompletną ofertę produktów.",
+            //        ParentId = null,
+            //        IsActive = true,
+            //        SortOrder = 2,
+            //        CreatedAt = new DateTime(2026, 8, 24, 22, 18, 15, DateTimeKind.Utc)
+            //    },
+            //    new Category
+            //    {
+            //        Id = Guid.Parse("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
+            //        Name = "Palniki",
+            //        Slug = "palniki",
+            //        Description = "Palniki do gotowania na świeżym powietrzu.",
+            //        ParentId = null,
+            //        IsActive = true,
+            //        SortOrder = 3,
+            //        CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, DateTimeKind.Utc)
+            //    },
+            //    new Category
+            //    {
+            //        Id = Guid.Parse("e4a91c37-52f8-4b06-a913-7c2d5e8f6041"),
+            //        Name = "Palniki alkoholowe",
+            //        Slug = "palniki-alkoholowe",
+            //        Description = "Palniki do gotowania na świeżym powietrzu.",
+            //        ParentId = Guid.Parse("b72d4f19-6a83-41c5-9e07-3d8b2a6f5410"),
+            //        IsActive = true,
+            //        SortOrder = 4,
+            //        CreatedAt = new DateTime(2026, 8, 24, 22, 18, 20, DateTimeKind.Utc),
+            //    }
+            //);
 
-            // configure the self-referencing relationship for Category
-            modelBuilder.Entity<Category>()
-                        .HasOne(c => c.CategoryParent)
-                        .WithMany(c => c.Subcategories)
-                        .HasForeignKey(k => k.ParentId)
-                        .OnDelete(DeleteBehavior.Restrict);
+            //// configure the self-referencing relationship for Category
+            //modelBuilder.Entity<Category>()
+            //            .HasOne(c => c.CategoryParent)
+            //            .WithMany(c => c.Subcategories)
+            //            .HasForeignKey(k => k.ParentId)
+            //            .OnDelete(DeleteBehavior.Restrict);
 
 
             // SEED INITIAL DATA FOR PRODUCTS
@@ -287,7 +294,8 @@ namespace AddPack.DataAccess.Data
                 {
                     Id = Guid.Parse("8f3b2d65-17c9-4a82-be31-6d5e7c9042fa"),
                     SeriesId = Guid.Parse("3f2504e0-4f89-41d3-9a0c-0305e82c3301"),
-                    CategoryId = Guid.Parse("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
+                    //CategoryId = Guid.Parse("1c6e8a42-93f5-4d71-b208-5a3f9c1e7642"),
+                    CategoryId = inneId,
                     Name = "Zestaw do gotowania",
                     Slug = "zestaw-do-gotowania",
                     Description = "Zestaw do gotowania na świeżym powietrzu. Składa się z osłony przeciwwiatrowej pełniącej funkcję uchwytu na garnek, palnika alkoholowego, garnka do gotowania, pokrywek do gotowania i wkładki do garnka na akcesoria. Idealny do biwakowania i turystyki pieszej.",
