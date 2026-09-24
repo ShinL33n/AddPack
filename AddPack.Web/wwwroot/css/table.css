@@ -1,0 +1,63 @@
+﻿/* Edit button — solid in light mode, outlined in dark mode */
+.series-actions .btn-edit,
+.series-cards .series-actions .btn-edit {
+    background-color: transparent;
+    color: var(--ap-olive);
+    border: 1px solid var(--ap-olive);
+}
+
+    .series-actions .btn-edit:hover,
+    .series-cards .series-actions .btn-edit:hover {
+        background-color: var(--ap-olive);
+        color: #fff;
+    }
+
+[data-bs-theme="dark"] .series-actions .btn-edit,
+[data-bs-theme="dark"] .series-cards .series-actions .btn-edit {
+    background-color: transparent;
+    color: var(--ap-olive-light);
+    border: 1px solid var(--ap-olive-light);
+}
+
+    [data-bs-theme="dark"] .series-actions .btn-edit:hover,
+    [data-bs-theme="dark"] .series-cards .series-actions .btn-edit:hover {
+        background-color: var(--ap-olive-light);
+        color: var(--ap-bg-dark);
+        border-color: var(--ap-olive-light);
+    }
+
+.btn-select-all {
+    padding: 1.2rem 0.9rem 1.2rem 0.7rem;
+    display: block;
+}
+
+.preview-img {
+    border: 1px solid var(--bs-border-color);
+    display: block;
+    max-width: 260px;
+    min-width: 160px
+}
+
+.series-sort-badge {
+    background-color: var(--bs-light);
+    border: 1px solid var(--ap-khaki);
+    color: var(--bs-body-color);
+}
+
+    [data-bs-theme="dark"] .series-sort-badge {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: var(--bs-body-color);
+    }
+
+
+.bi-square:hover::before {
+    content: "\F26D"; /* kod bi-check2-square */
+    color: var(--ap-khaki);
+    cursor: pointer;
+}
+
+.bi-check-square:hover::before {
+    content: "\F584"; /* kod bi-check2-square */
+    color: var(--ap-khaki);
+    cursor: pointer;
+}

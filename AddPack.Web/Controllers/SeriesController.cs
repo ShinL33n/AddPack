@@ -293,7 +293,7 @@ public class SeriesController : Controller
     }
 
 
-
+    // Move to Utility
     public async Task<string> AddImageAsync(IFormFile file, Guid guid, string name)
     {
         string createdAt = DateTime.UtcNow.ToString().Replace(" ", "_").Replace(":","_");
