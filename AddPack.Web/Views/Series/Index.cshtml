@@ -20,11 +20,23 @@
 }
 
 <div class="container mt-4 series-index-page">
-    <div class="series-toolbar d-flex justify-content-between align-items-center mb-4 pb-2">
-        <h2 class="series-page-title mb-0 fw-bolder">Zarządzanie Seriami Produktów</h2>
-        <a asp-controller="Series" asp-action="Create" class="btn btn-ap-primary shadow-sm">
-            <i class="bi bi-plus-circle me-1"></i> Dodaj nową serię
-        </a>
+    <div class="series-toolbar d-flex justify-content-between align-items-center mb-4 pb-2 gap-1 flex-wrap">
+        <h2 class="series-page-title mb-0 fw-bolder pb-3 pb-lg-0">Zarządzanie Seriami Produktów</h2>
+        <div class="d-flex justify-content-end align-items-center gap-2">
+            <button asp-controller="Series" asp-action="ArchiveSelected"
+                    type="submit" form="updateSeries" 
+                    class="btn btn-sm btn-ap-outline">
+                <i class="bi bi-archive me-1"></i> Wyłącz zaznaczone
+            </button>
+            <button asp-controller="Series" asp-action="RestoreSelected"
+                    type="submit" form="updateSeries" 
+                    class="btn btn-sm btn-ap-outline">
+                <i class="bi bi-arrow-90deg-up"></i> Przywróć zaznaczone
+            </button>
+            <a asp-controller="Series" asp-action="Create" class="btn btn-ap-primary shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i> Dodaj nową serię
+            </a>
+        </div>
     </div>
 
     @if (Model != null && Model.Any())
@@ -86,7 +98,7 @@
                                 <span class="badge bg-secondary px-2 py-1 rounded-pill">Nieaktywna</span>
                             }
                             <div class="series-actions btn-group shadow-sm" role="group">
-                                <a asp-action="Edit" asp-route-slug="@item.Slug" class="btn btn-edit" title="Edytuj">Edytuj</a>
+                                <a asp-action="Edit" asp-route-id="@item.Slug" class="btn btn-edit" title="Edytuj">Edytuj</a>
                                 <button type="submit"
                                         form="archiveRestoreSeriesForm"
                                         onclick="document.getElementById('archiveRestoreSeriesFormId').value = '@item.Id';"
@@ -118,7 +130,7 @@
         </form>
 
         <div class="series-table-wrap d-none d-lg-block">
-            <div class="d-flex justify-content-end align-items-center mb-3 gap-3">
+           @* <div class="d-flex justify-content-end align-items-center mb-3 gap-3">
                 <button type="submit" form="updateSeries"
                         asp-controller="Series" asp-action="ArchiveSelected"
                         class="btn btn-sm btn-ap-outline">
@@ -130,7 +142,7 @@
                         class="btn btn-sm btn-ap-outline">
                     <i class="bi bi-arrow-90deg-up"></i> Przywróć zaznaczone
                 </button>
-            </div>
+            </div> *@
 
             <div class="table-responsive shadow-sm rounded overflow-hidden">
                 <table class="series-table table table-hover align-middle mb-0">
@@ -193,7 +205,7 @@
                             </td>
                             <td class="text-end pe-3">
                                 <div class="series-actions btn-group shadow-sm" role="group">
-                                    <a asp-action="Edit" asp-route-slug="@item.Slug" class="btn btn-sm btn-edit" title="Edytuj">
+                                    <a asp-action="Edit" asp-route-id="@item.Slug" class="btn btn-sm btn-edit" title="Edytuj">
                                         Edytuj
                                     </a>
                                     <button type="submit"

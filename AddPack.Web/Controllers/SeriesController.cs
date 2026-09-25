@@ -128,8 +128,10 @@ public class SeriesController : Controller
     //}
 
     [HttpGet]
-    public async Task<IActionResult> Edit(string? slug)
+    public async Task<IActionResult> Edit(string? id)
     {
+        var slug = id;
+
         if (string.IsNullOrEmpty(slug))
         {
             return NotFound();

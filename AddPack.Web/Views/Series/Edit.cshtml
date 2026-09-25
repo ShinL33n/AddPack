@@ -5,7 +5,7 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/series-index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/manage-index.css" asp-append-version="true" />
 }
 
 <div class="container mt-4 series-edit-page">
@@ -83,8 +83,8 @@
                             <span asp-validation-for="NewImage" class="text-danger small"></span>
                         </div>
 
-                        <div class="mb-4 form-check form-switch">
-                            <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                        <div class="mb-4 form-check form-switch d-flex align-items-center gap-2">
+                            <input asp-for="IsActive" class="form-check-input checkbox-md" type="checkbox" />
                             <label asp-for="IsActive" class="form-check-label fw-bold">Seria aktywna</label>
                         </div>
 
@@ -110,4 +110,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/form.js" asp-append-version="true"></script>
 }

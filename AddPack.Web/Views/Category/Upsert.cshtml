@@ -1,0 +1,90 @@
+﻿@model AddPack.Models.ViewModels.CategoryVM
+
+@{
+    ViewData["Title"] = $"Utwórz serię";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/manage-index.css" asp-append-version="true" />
+}
+
+<div class="container mt-4 series-edit-page">
+    <div class="series-toolbar d-flex justify-content-between align-items-center mb-4 pb-2">
+        <h2 class="series-page-title mb-0 fw-bolder">Utwórz kategorię</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Wróć do listy
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="series-edit-card card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: var(--ap-green);">
+                    <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Utwórz kategorię</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Category.Id" />
+                        <input type="hidden" asp-for="Category.CreatedAt" />
+
+                        <div class="mb-3">
+                            <label asp-for="Category.Name" class="form-label fw-bold"></label>
+                            <input asp-for="Category.Name" class="form-control" placeholder="Wpisz nazwę serii" />
+                            <span asp-validation-for="Category.Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Category.Slug" class="form-label fw-bold"></label>
+                            <input asp-for="Category.Slug" class="form-control" placeholder="np. moja-seria" />
+                            <span asp-validation-for="Category.Slug" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Category.Description" class="form-label fw-bold"></label>
+                            <textarea asp-for="Category.Description" class="form-control" rows="4" placeholder="Dodaj (opcjonalnie) opis serii."></textarea>
+                            <span asp-validation-for="Category.Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Category.SortOrder" class="form-label fw-bold"></label>
+                                <input asp-for="Category.SortOrder" class="form-control" type="number" placeholder="auto" />
+                                <span asp-validation-for="Category.SortOrder" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Category.ParentId" class="form-label fw-bold"></label>
+								<select asp-for="Category.ParentId" asp-items="@Model.CategoryList" class="form-control"> 
+                                    <option value="" 
+                                        title="Pozostaw bez zmian jeżeli chcesz, aby ta kategoria była kategorią główną (nadrzędną).">
+                                        — Wybierz kategorię nadrzędną —
+                                    </option>
+                                </select>
+                                <span asp-validation-for="Category.ParentId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3 form-check form-switch d-flex align-items-center gap-2">
+                            <input asp-for="Category.IsActive" class="form-check-input checkbox-md" type="checkbox"/>
+                            <label asp-for="Category.IsActive" class="form-check-label fw-bold">Kategoria aktywna</label>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-ap-primary px-4">
+                                <i class="bi bi-check-lg me-1"></i> Zapisz zmiany
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-danger shadow-sm">
+                                <i class="bi bi-x-lg me-1"></i> Anuluj
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />    
+    <script src="~/js/form.js" asp-append-version="true"></script>
+}

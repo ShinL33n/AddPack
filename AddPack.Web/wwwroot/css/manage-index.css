@@ -275,3 +275,13 @@ table.table.dataTable > :not(caption) > * > * {
 #categoryTable.dataTable thead .dt-ordering-desc .dt-column-order::after {
     opacity: 1;
 }
+
+
+.checkbox-md {
+    width: 3.2em !important;
+    height: 1.6em;
+}
+
+    .checkbox-md + .form-check-label {
+        padding-top: 0.2em !important;
+    }

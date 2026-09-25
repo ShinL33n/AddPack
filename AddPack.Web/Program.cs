@@ -29,17 +29,21 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(
-    //name: "default",
-    name: "slug-driven",
-    pattern: "{controller=Home}/{action=Index}/{slug?}")
-    .WithStaticAssets();
+//app.MapControllerRoute(
+//    name: "guid-driven",
+//    pattern: "{controller=Home}/{action=Index}/{guid:guid?}")
+//    .WithStaticAssets();
+
+//app.MapControllerRoute(
+//    name: "slug-driven",
+//    pattern: "{controller=Home}/{action=Index}/{slug?}")
+//    .WithStaticAssets();
 
 app.MapControllerRoute(
-    //name: "id-driven",
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
 
 
 app.Run();

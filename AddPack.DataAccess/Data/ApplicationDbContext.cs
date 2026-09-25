@@ -153,6 +153,30 @@ namespace AddPack.DataAccess.Data
                     IsActive = true,
                     SortOrder = 1,
                     CreatedAt = seedDate
+                },
+
+                // - Subsubkategorie: Plecaki trekkingowe -
+                new Category
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222235"),
+                    ParentId = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    Name = "Plecaki klasyczne",
+                    Description = "Plecaki o klasycznej konstrukcji",
+                    Slug = "plecaki-klasyczne",
+                    IsActive = true,
+                    SortOrder = 2,
+                    CreatedAt = seedDate
+                },
+                new Category
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222236"),
+                    ParentId = Guid.Parse("22222222-2222-2222-2222-222222222223"),
+                    Name = "Plecaki ultralekkie",
+                    Description = "Plecaki z ultralekkich materiałów.",
+                    Slug = "plecaki-ultralekkie",
+                    IsActive = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate
                 }
             );
 

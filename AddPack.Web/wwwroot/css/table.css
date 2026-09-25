@@ -61,3 +61,43 @@
     color: var(--ap-khaki);
     cursor: pointer;
 }
+
+/* hierarchy rows */
+/* Warstwa przyciemniająca wiersze-dzieci w tabelach hierarchicznych.
+   Nakładka na wierzchu komórki zamiast walki o background-color -
+   omija problemy ze specyficznością wobec innych reguł na td. */
+.dataTable tbody tr[class*="level-"] td {
+    position: relative;
+}
+
+    .dataTable tbody tr[class*="level-"] td::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-color: black;
+    }
+
+[data-bs-theme="dark"] .dataTable tbody tr[class*="level-"] td::after {
+    background-color: white;
+}
+
+.dataTable tbody tr.level-1 td::after {
+    opacity: .02;
+}
+
+.dataTable tbody tr.level-2 td::after {
+    opacity: .04;
+}
+
+.dataTable tbody tr.level-3 td::after {
+    opacity: .08;
+}
+
+.dataTable tbody tr.level-4 td::after {
+    opacity: .12;
+}
+
+.dataTable tbody tr.level-5 td::after {
+    opacity: .16;
+}

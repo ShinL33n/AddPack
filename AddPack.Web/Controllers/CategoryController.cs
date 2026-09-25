@@ -1,6 +1,9 @@
 ﻿using AddPack.Business.Services.IServices;
+using AddPack.Models;
 using AddPack.Models.DTOs;
+using AddPack.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AddPack.Web.Controllers;
 
@@ -25,12 +28,54 @@ public class CategoryController : Controller
     {
         _categoryService = categoryService;
     }
+
+
     public async Task<IActionResult> Index()
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
 
         return View(categories);
     }
+
+    [HttpGet()]
+    public async Task<IActionResult> Upsert(Guid? id = null)
+    {
+        var categories = await _categoryService.GetAllCategoriesAsync();
+
+        if (id == null)
+        {
+            CategoryVM categoryVM = new()
+            {
+                Category = new Category(),
+                CategoryList = categories.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList()
+            };
+
+            return View(categoryVM);
+        }
+        else
+        {
+            var category = await _categoryService.GetCategoryByIdAsync(id.Value);
+
+            if (category == null) return NotFound();
+
+            CategoryVM categoryVM = new()
+            {
+                Category = category,
+                CategoryList = categories.Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                }).ToList()
+            };
+            return View(categoryVM);
+        }
+
+    }
+
 
 
 
