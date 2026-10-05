@@ -21,122 +21,132 @@ $.fn.dataTable.ext.type.order['hierarchical-desc'] = function (a, b) {
     return compareHierarchical(a, b, true);
 };
 
-$('#categoryTable').DataTable({
-    ajax: {
-        url: '/category/getallcategories',
-        dataSrc: function (json) {
-            var rows = Array.isArray(json) ? json : json.data;
-            computeLevels(rows);
-            buildSortKeys(rows, 'name', false);
-            buildSortKeys(rows, 'sortOrder', true);   // isNumeric = true!
-            buildSortKeys(rows, 'description', false);
-            return rows;
-        }
-    },
-    createdRow: function (row, data) {
-        if (data.level > 0) {
-            var lvl = Math.min(data.level, 5); // limit, żeby nie tworzyć nieskończonej liczby klas
-            $(row).addClass('level-' + lvl);
-        }
-    },
-    order: [1, 'asc'],
-    language: {
-        lengthMenu: 'Pokaż _MENU_ kategorii na stronę',
-        info: 'Pokazano od _START_ do _END_ z _TOTAL_ kategorii',
-        infoEmpty: 'Brak pozycji do wyświetlenia',
-        infoFiltered: '(przefiltrowano z _MAX_ kategorii)',
-        search: 'Szukaj:',
-        zeroRecords: 'Nie znaleziono pasujących kategorii',
-        processing: 'Przetwarzanie...',
-        paginate: {
-            first: 'Pierwsza',
-            last: 'Ostatnia',
-            next: 'Następna',
-            previous: 'Poprzednia'
-        }
-    },
-    columns: [
-        {
-            data: 'id',
-            width: '5%',
-            className: 'selectSection',
-            orderable: false,
-            render: function (data, type, row) {
-                var indent = (row.level || 0) * 24;
-                return `<label class="btn-select-all" style="margin-left: ${indent}px;">
+var productDataTable;
+
+$(document).ready(function () {
+    loadDataTable();
+})
+
+function loadDataTable() {
+    productDataTable = $('#categoryTable').DataTable({
+        ajax: {
+            url: '/category/getallcategories',
+            dataSrc: function (json) {
+                var rows = Array.isArray(json) ? json : json.data;
+                computeLevels(rows);
+                buildSortKeys(rows, 'name', false);
+                buildSortKeys(rows, 'sortOrder', true);   // isNumeric = true!
+                buildSortKeys(rows, 'description', false);
+                return rows;
+            }
+        },
+        createdRow: function (row, data) {
+            if (data.level > 0) {
+                var lvl = Math.min(data.level, 5); // limit, żeby nie tworzyć nieskończonej liczby klas
+                $(row).addClass('level-' + lvl);
+            }
+        },
+        order: [1, 'asc'],
+        language: {
+            lengthMenu: 'Pokaż _MENU_ kategorii na stronę',
+            info: 'Pokazano od _START_ do _END_ z _TOTAL_ kategorii',
+            infoEmpty: 'Brak pozycji do wyświetlenia',
+            infoFiltered: '(przefiltrowano z _MAX_ kategorii)',
+            search: 'Szukaj:',
+            zeroRecords: 'Nie znaleziono pasujących kategorii',
+            processing: 'Przetwarzanie...',
+            paginate: {
+                first: 'Pierwsza',
+                last: 'Ostatnia',
+                next: 'Następna',
+                previous: 'Poprzednia'
+            }
+        },
+        columns: [
+            {
+                data: 'id',
+                width: '5%',
+                className: 'selectSection',
+                orderable: false,
+                render: function (data, type, row) {
+                    var indent = (row.level || 0) * 24;
+                    return `<label class="btn-select-all" style="margin-left: ${indent}px;">
                             <input type="checkbox" name="ids" value="${data}" class="item-checkbox" form="updateCategory" />
                         </label>`;
-            }
-        },
-        {
-            data: 'sortOrder',
-            width: '5%',
-            type: 'hierarchical',
-            render: function (data, type, row) {
-                if (type === 'sort') return row.sortKey_sortOrder;
-                if (type === 'filter' || type === 'type') return data ?? -1;
-                var indent = (row.level || 0) * 24;
-                return `<span class="series-sort-badge badge px-2 py-1 rounded-pill" style="margin-left: ${indent}px;">${data ?? '-'}</span>`;
-            }
-        },
-        {
-            data: 'name',
-            width: '20%',
-            className: 'fw-bold',
-            type: 'hierarchical',
-            render: function (data, type, row) {
-                if (type === 'sort') return row.sortKey_name;
-                if (type === 'filter' || type === 'type') return data;
-                var indent = (row.level || 0) * 24;
-                return `<span style="display: inline-block; margin-left: ${indent}px;">${data}</span>`;
-            }
-        },
-        {
-            data: 'description',
-            width: '25%',
-            className: 'text-muted small',
-            type: 'hierarchical',
-            render: function (data, type, row) {
-                if (type === 'sort') return row.sortKey_description;
-                if (type !== 'display') return data ?? '';
-                if (!data) return '—';
-                return data.length > 40 ? data.substring(0, 40) + '...' : data;
-            }
-        },
-        {
-            data: 'createdAt',
-            width: '20%',
-            className: 'text-muted small',
-            render: function (data, type) {
-                if (type !== 'display') return data;
-                return formatDatePl(data);
-            }
-        },
-        {
-            data: 'isActive',
-            width: '15%',
-            className: 'dt-center',
-            render: function (data, type) {
-                if (type !== 'display') return data;
-                return data
-                    ? '<span class="badge badge-ap px-2 py-1 rounded-pill">Tak</span>'
-                    : '<span class="badge bg-secondary px-2 py-1 rounded-pill">Nie</span>';
-            }
-        },
-        {
-            data: 'id',
-            width: '10%',
-            className: 'text-end pe-3',
-            orderable: false,
-            render: function (data) {
-                return `<div class="series-actions btn-group shadow-sm" role="group">
+                }
+            },
+            {
+                data: 'sortOrder',
+                width: '5%',
+                type: 'hierarchical',
+                render: function (data, type, row) {
+                    if (type === 'sort') return row.sortKey_sortOrder;
+                    if (type === 'filter' || type === 'type') return data ?? -1;
+                    var indent = (row.level || 0) * 24;
+                    return `<span class="series-sort-badge badge px-2 py-1 rounded-pill" style="margin-left: ${indent}px;">${data ?? '-'}</span>`;
+                }
+            },
+            {
+                data: 'name',
+                width: '20%',
+                className: 'fw-bold',
+                type: 'hierarchical',
+                render: function (data, type, row) {
+                    if (type === 'sort') return row.sortKey_name;
+                    if (type === 'filter' || type === 'type') return data;
+                    var indent = (row.level || 0) * 24;
+                    return `<span style="display: inline-block; margin-left: ${indent}px;">${data}</span>`;
+                }
+            },
+            {
+                data: 'description',
+                width: '25%',
+                className: 'text-muted small',
+                type: 'hierarchical',
+                render: function (data, type, row) {
+                    if (type === 'sort') return row.sortKey_description;
+                    if (type !== 'display') return data ?? '';
+                    if (!data) return '—';
+
+                    const plainText = stripHtml(data);
+                    return plainText.length > 40 ? plainText.substring(0, 40) + '...' : plainText;
+                }
+            },
+            {
+                data: 'createdAt',
+                width: '20%',
+                className: 'text-muted small',
+                render: function (data, type) {
+                    if (type !== 'display') return data;
+                    return formatDatePl(data);
+                }
+            },
+            {
+                data: 'isActive',
+                width: '15%',
+                className: 'dt-center',
+                render: function (data, type) {
+                    if (type !== 'display') return data;
+                    return data
+                        ? '<span class="badge badge-ap px-2 py-1 rounded-pill">Tak</span>'
+                        : '<span class="badge bg-secondary px-2 py-1 rounded-pill">Nie</span>';
+                }
+            },
+            {
+                data: 'id',
+                width: '10%',
+                className: 'text-end pe-3',
+                orderable: false,
+                render: function (data) {
+                    return `<div class="series-actions btn-group shadow-sm" role="group">
                             <a href="/Category/Upsert/${data}" class="btn btn-sm btn-edit" title="Edytuj">Edytuj</a>
-                            <a href="/Category/Delete/${data}" class="btn btn-sm btn-outline-danger" title="Usuń">Usuń</a>
+                            <a onclick=(Delete('/Category/Delete/${data}')) class="btn btn-sm btn-outline-danger" title="Usuń">Usuń</a>
                         </div>`;
+                }
             }
-        }
-    ]
-});
+        ]
+    });
+}
 
 function formatDatePl(isoString) {
     if (!isoString) return '';
@@ -202,4 +212,39 @@ function computeLevels(rows) {
 
     rows.forEach(function (r) { getLevel(r); });
     return rows;
+}
+
+function stripHtml(html) {
+    const withSpaces = html.replace(/<\/(p|div|li|h[1-6])>/gi, '$& ');
+    const temp = document.createElement('div');
+    temp.innerHTML = withSpaces;
+    return (temp.textContent || temp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
+function Delete(url) {
+    Swal.fire({
+        title: "Jesteś tego pewien?",
+        text: "Nie odzyskasz usuniętych kategorii! Zawsze możesz wyłączyć ich widoczność.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Tak, usuń!",
+        cancelButtonText: "Anuluj",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                success: function (data) {
+                    productDataTable.ajax.reload();
+                    Swal.fire({
+                        title: "Usunięto!",
+                        text: "Kategoria została usunięta.",
+                        icon: "success"
+                    });
+                }
+            })
+        }
+    });
 }

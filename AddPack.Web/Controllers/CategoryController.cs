@@ -1,4 +1,5 @@
-﻿using AddPack.Business.Services.IServices;
+﻿using AddPack.Business.Services;
+using AddPack.Business.Services.IServices;
 using AddPack.Models;
 using AddPack.Models.DTOs;
 using AddPack.Models.ViewModels;
@@ -37,7 +38,7 @@ public class CategoryController : Controller
         return View(categories);
     }
 
-    [HttpGet()]
+    [HttpGet]
     public async Task<IActionResult> Upsert(Guid? id = null)
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
@@ -77,10 +78,69 @@ public class CategoryController : Controller
     }
 
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Upsert(CategoryVM categoryVM)
+    {
+        Guid? id = categoryVM.Category.Id == Guid.Empty ? null : categoryVM.Category.Id;
+
+        if (!String.IsNullOrEmpty(categoryVM.Category.Name) && !await _categoryService.IsNameUniqueAsync(categoryVM.Category.Name, id))
+        {
+            ModelState.AddModelError("Category.Name", "Kategoria o tej nazwie już istnieje.");
+        }
+
+        if (!String.IsNullOrEmpty(categoryVM.Category.Slug) && !await _categoryService.IsNameUniqueAsync(categoryVM.Category.Slug, id))
+        {
+            ModelState.AddModelError("Category.Slug", "Slug o tej nazwie już istnieje.");
+        }
+
+        if (ModelState.IsValid)
+        {
+            string successMessage;
+
+            // Check if category is being created or updated
+            if (categoryVM.Category.Id == Guid.Empty || categoryVM.Category.Id == null)
+            {
+                categoryVM.Category.Id = Guid.NewGuid();
+                categoryVM.Category.CreatedAt = DateTime.UtcNow;
+
+                if (categoryVM.Category.SortOrder == null)
+                {
+                    int maxSortOrder = await _categoryService.GetMaxSortOrderAsync(categoryVM.Category.ParentId);
+                    categoryVM.Category.SortOrder = maxSortOrder + 1;
+                }
+
+                await _categoryService.CreateCategoryAsync(categoryVM.Category);
+                successMessage = "utworzona";
+            }
+            else
+            {
+                // Handle the case where the category is being turned inactive/active
+                // and ensure that the subcategories and items are also updated accordingly
+
+                await _categoryService.UpdateCategoryAsync(categoryVM.Category);
+                successMessage = "zaktualizowana";
+            }
+
+            TempData["Success"] = $"Kategoria została pomyślnie {successMessage}.";
+            return RedirectToAction(nameof(Index));
+        }
+        else
+        {
+            var categories = await _categoryService.GetAllCategoriesAsync();
+
+            categoryVM.CategoryList = categories.Select(c => new SelectListItem
+            {
+                Text = c.Name,
+                Value = c.Id.ToString()
+            });
+
+            return View(categoryVM);
+        }
+    }
 
 
     #region API_CALLS
-
     public async Task<IActionResult> GetAllCategories()
     {
         var categories = await _categoryService.GetAllCategoriesAsync();
@@ -97,6 +157,29 @@ public class CategoryController : Controller
         }).ToList();
 
         return Json(new { data = categoryDtos });
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete(Guid? id)
+    {
+        if (id == Guid.Empty || id == null)
+        {
+            return Json(new { success = false, message = "Invalid ID" });
+        }
+
+        var category = _categoryService.GetCategoryByIdAsync(id.Value);
+
+        if (category == null)
+        {
+            TempData["Error"] = $"Nie odnaleziono kategorii przeznaczonej do usunięcia.";
+            return Json(new { success = false, message = "Error while deleting" });
+        }
+
+
+        await _categoryService.DeleteCategoriesAsync([id.Value]);
+
+        TempData["Success"] = $"Kategoria została usunięta.";
+        return Json(new { success = true, message = "Delete Successful" });
     }
 
     #endregion

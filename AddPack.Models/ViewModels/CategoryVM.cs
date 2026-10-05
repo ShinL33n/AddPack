@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AddPack.Models.ViewModels;
 
 public class CategoryVM
 {
     public Category Category { get; set; }
+
+    [ValidateNever]
     public IEnumerable<SelectListItem> CategoryList { get; set; }
 
 }

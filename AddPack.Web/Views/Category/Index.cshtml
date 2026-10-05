@@ -38,44 +38,6 @@
                             <th scope="col" class="py-3 text-end pe-3">Akcje</th>
                         </tr>
                     </thead>
-                    @* <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td></td>
-                                <td class="text-center">
-                                    <span class="series-sort-badge badge px-2 py-1 rounded-pill">
-                                        @(item.SortOrder?.ToString() ?? "-")
-                                    </span>
-                                </td>
-                                <td class="series-name-cell fw-bold">@item.Name</td>
-                                <td class="text-muted small">
-                                    @(!string.IsNullOrEmpty(item.Description)
-                                        ? item.Description.Length > 40
-                                            ? item.Description.Substring(0, 40) + "..."
-                                            : item.Description
-                                        : "—")
-                                </td>
-                                <td class="text-center">
-                                    @if (item.IsActive)
-                                    {
-                                        <span class="badge badge-ap px-2 py-1 rounded-pill">Tak</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-secondary px-2 py-1 rounded-pill">Nie</span>
-                                    }
-                                </td>
-                                <td class="text-muted small">@item.CreatedAt.ToString("yyyy-MM-dd")</td>
-                                <td class="text-end pe-3">
-                                    <div class="series-actions btn-group shadow-sm" role="group">
-                                        <a asp-controller="Category" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-edit" title="Edytuj">Edytuj</a>
-                                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Usuń">Usuń</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody> *@
                 </table>
             </div>
         </div>

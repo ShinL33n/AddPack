@@ -57,13 +57,13 @@ public class SeriesController : Controller
 
         Series newSeries = new Series
         {
-            Id = Guid.NewGuid(),
+            Id = id,
             Name = seriesVM.Name,
             Slug = seriesVM.Slug,
             Description = seriesVM.Description,
             IsActive = seriesVM.IsActive,
             SortOrder = seriesVM.SortOrder,
-            CreatedAt = DateTime.UtcNow,
+            CreatedAt = createdAt,
             Image = seriesVM.Image != null ? await AddImageAsync(seriesVM.Image, id, seriesVM.Name) : null
         };
 
@@ -163,12 +163,12 @@ public class SeriesController : Controller
 
         if (!String.IsNullOrEmpty(seriesVM.Name) && !await _seriesService.IsNameUniqueAsync(seriesVM.Name, seriesVM.Id))
         {
-            ModelState.AddModelError("", "Seria o tej nazwie już istnieje.");
+            ModelState.AddModelError("Name", "Seria o tej nazwie już istnieje.");
         }
 
         if (!String.IsNullOrEmpty(seriesVM.Slug) && !await _seriesService.IsNameUniqueAsync(seriesVM.Slug, seriesVM.Id))
         {
-            ModelState.AddModelError("", "Slug o tej nazwie już istnieje.");
+            ModelState.AddModelError("Slug", "Slug o tej nazwie już istnieje.");
         }
 
         Series newSeries = new Series

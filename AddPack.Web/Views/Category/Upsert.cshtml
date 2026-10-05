@@ -6,6 +6,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/manage-index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/quill.css" asp-append-version="true" />
 }
 
 <div class="container mt-4 series-edit-page">
@@ -23,7 +24,7 @@
                     <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Utwórz kategorię</h5>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    <form asp-action="Upsert" method="post">
                         <input type="hidden" asp-for="Category.Id" />
                         <input type="hidden" asp-for="Category.CreatedAt" />
 
@@ -41,7 +42,8 @@
 
                         <div class="mb-3">
                             <label asp-for="Category.Description" class="form-label fw-bold"></label>
-                            <textarea asp-for="Category.Description" class="form-control" rows="4" placeholder="Dodaj (opcjonalnie) opis serii."></textarea>
+                            <textarea hidden asp-for="Category.Description" class="form-control" rows="4" placeholder="Dodaj (opcjonalnie) opis serii."></textarea>
+                            <div id="quill-editor" style="height: 140px"></div>
                             <span asp-validation-for="Category.Description" class="text-danger small"></span>
                         </div>
 
@@ -87,4 +89,9 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />    
     <script src="~/js/form.js" asp-append-version="true"></script>
+
+    <!-- Quill: include core from CDN and our init file -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+    <script src="~/js/quill.js" asp-append-version="true"></script>
 }

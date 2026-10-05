@@ -8,6 +8,8 @@ namespace AddPack.Business.Services;
 
 public class CategoryService : ICategoryService
 {
+    private readonly String DefaultCategorySlug = "inne";
+
     private readonly ApplicationDbContext _dbContext;
 
     public CategoryService(ApplicationDbContext dbContext)
@@ -168,8 +170,8 @@ public class CategoryService : ICategoryService
     public async Task<int> GetMaxSortOrderAsync(Guid? parentId = null)
     {
         return parentId.HasValue ?
-            await _dbContext.Categories.Where(c => c.ParentId == parentId).MaxAsync(c => (int?)c.SortOrder) ?? 0 :
-            await _dbContext.Categories.Where(c => c.ParentId == null).MaxAsync(c => (int?)c.SortOrder) ?? 0;
+            await _dbContext.Categories.Where(c => c.ParentId == parentId).MaxAsync(c => (int?)c.SortOrder) ?? 1 :
+            await _dbContext.Categories.Where(c => c.ParentId == null).MaxAsync(c => (int?)c.SortOrder) ?? 1;
     }
 
     public async Task<bool> IsNameUniqueAsync(string name, Guid? id = null)
@@ -187,7 +189,7 @@ public class CategoryService : ICategoryService
     private Guid GetDefaultCategoryId()
     {
         return _dbContext.Categories
-                .Where(c => c.Slug == "inne")
+                .Where(c => c.Slug == DefaultCategorySlug)
                 .Select(c => c.Id)
                 .FirstOrDefault();
     }

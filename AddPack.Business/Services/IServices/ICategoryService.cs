@@ -19,7 +19,7 @@ public interface ICategoryService
     Task<int> DeleteCategoriesAsync(List<Guid> ids);
 
     // Utils
-    Task<int> GetMaxSortOrderAsync(Guid? parentId);
+    Task<int> GetMaxSortOrderAsync(Guid? parentId = null);
     Task<bool> IsNameUniqueAsync(string name, Guid? id = null);
 
 }
