@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AddPack.Models;
@@ -18,7 +19,7 @@ public class Category
     public string Name { get; set; } = string.Empty;
 
     [Display(Name = "Opis kategorii")]
-    public string Description { get; set; } = string.Empty;
+    public string? Description { get; set; } = string.Empty;
 
     [Display(Name = "Slug (link)")]
     public string Slug { get; set; } = string.Empty;

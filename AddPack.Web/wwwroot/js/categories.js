@@ -47,6 +47,7 @@ function loadDataTable() {
             }
         },
         order: [1, 'asc'],
+        pageLength: 25,
         language: {
             lengthMenu: 'Pokaż _MENU_ kategorii na stronę',
             info: 'Pokazano od _START_ do _END_ z _TOTAL_ kategorii',
@@ -137,10 +138,12 @@ function loadDataTable() {
                 width: '10%',
                 className: 'text-end pe-3',
                 orderable: false,
-                render: function (data) {
+                render: function (data, type, row) {
+                    var toggleLabel = row.isActive ? 'Wyłącz' : 'Włącz';
                     return `<div class="series-actions btn-group shadow-sm" role="group">
                             <a href="/Category/Upsert/${data}" class="btn btn-sm btn-edit" title="Edytuj">Edytuj</a>
-                            <a onclick=(Delete('/Category/Delete/${data}')) class="btn btn-sm btn-outline-danger" title="Usuń">Usuń</a>
+                            <a onclick="Activate('${data}')" class="btn btn-sm btn-outline-disabled" style="width: 4rem" title="${toggleLabel}">${toggleLabel}</a>
+                            <a onclick="Delete('${data}')" class="btn btn-sm btn-outline-danger" title="Usuń">Usuń</a>
                         </div>`;
                 }
             }
@@ -221,7 +224,21 @@ function stripHtml(html) {
     return (temp.textContent || temp.innerText || '').replace(/\s+/g, ' ').trim();
 }
 
-function Delete(url) {
+function Delete(id) {
+    callDelete([id]);
+}
+
+function BulkDelete() {
+    var ids = $('input[name="ids"]:checked').map(function () {
+        return this.value;
+    }).get();
+
+    if (ids.length === 0) return;
+
+    callDelete(ids);
+}
+
+function callDelete(ids) {
     Swal.fire({
         title: "Jesteś tego pewien?",
         text: "Nie odzyskasz usuniętych kategorii! Zawsze możesz wyłączyć ich widoczność.",
@@ -234,17 +251,86 @@ function Delete(url) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: url,
+                url: '/Category/Delete',
                 type: 'DELETE',
+                data: { ids: ids },
+                traditional: true,
+                headers: {
+                    'RequestVerificationToken': $('meta[name="request-verification-token"]').attr('content')
+                },
                 success: function (data) {
                     productDataTable.ajax.reload();
+
+                    if (data.success) {
+                        Swal.fire({
+                            title: "Usunięto!",
+                            text: "Kategoria została usunięta.",
+                            icon: "success"
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            title: "Nie usunięto.",
+                            text: data.message == "0 categories deleted."
+                                    ? "Żadna kategoria nie została usunięta." :
+                                    "Wystąpił błąd podczas usuwania kategorii.",
+                            icon: "error"
+                        });
+                    }
+                },
+                error: function (xhr) {
+                    productDataTable.ajax.reload();
                     Swal.fire({
-                        title: "Usunięto!",
-                        text: "Kategoria została usunięta.",
-                        icon: "success"
+                        title: "Coś poszło nie tak.",
+                        text: "Wystąpił błąd podczas usuwania kategorii.",
+                        icon: "error"
                     });
                 }
             })
         }
     });
 }
+
+function Activate(id) {
+    callActivation([id]);
+}
+
+function BulkActivate(value) {
+    var ids = $('input[name="ids"]:checked').map(function () {
+        return this.value;
+    }).get();
+
+    if (ids.length === 0) return;
+
+    callActivation(ids, value);
+}
+
+function callActivation(ids, value) {
+    var data = { ids: ids };
+
+    if (typeof value === 'boolean') {
+        data.value = value;
+    }
+
+    $.ajax({
+        url: '/Category/Activation',
+        type: 'PATCH',
+        data: data,
+        traditional: true,
+        headers: {
+            'RequestVerificationToken': $('meta[name="request-verification-token"]').attr('content')
+        },
+        success: function (data) {
+            productDataTable.ajax.reload();
+        }
+    });
+}
+
+
+
+function toggleBulkButton() {
+    var anyChecked = $('input[name="ids"]:checked').length > 0;
+    $('.bulk-action-button').toggleClass('d-none', !anyChecked);
+}
+
+$(document).on('change', 'input[name="ids"]', toggleBulkButton);

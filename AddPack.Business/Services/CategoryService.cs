@@ -23,6 +23,12 @@ public class CategoryService : ICategoryService
         return await _dbContext.Categories.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Category>> GetCategoriesByIdAsync(List<Guid> ids)
+    {
+        return await _dbContext.Categories.Where(c => ids.Contains(c.Id)).ToListAsync();
+    }
+
+
     public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
     {
         return await _dbContext.Categories.ToListAsync();
@@ -79,15 +85,24 @@ public class CategoryService : ICategoryService
             await transaction.CommitAsync();
             return updatedCount; */
 
+            // wybieramy kategorie z bazy jako lista obiektów z Id i ParentId, żeby nie pobierać całych encji
             var allCategories = await _dbContext.Categories
                 .Select(c => new { c.Id, c.ParentId })
                 .ToListAsync();
 
             // Zbuduj mapę rodzic -> dzieci, żeby przeszukiwanie było O(1) per węzeł
+
+            // grupujemy kategorie po ParentId, a następnie tworzymy słownik,
+            // gdzie kluczem jest ParentId, a wartością lista Id dzieci
+            //var childrenByParent = allCategories
+            //    .Where(c => c.ParentId.HasValue)
+            //    .ToLookup(c => c.ParentId!.Value, c => c.Id);
+            //    .GroupBy(c => c.ParentId!.Value)
+            //    .ToDictionary(g => g.Key, g => g.Select(c => c.Id).ToList());
+
             var childrenByParent = allCategories
                 .Where(c => c.ParentId.HasValue)
-                .GroupBy(c => c.ParentId!.Value)
-                .ToDictionary(g => g.Key, g => g.Select(c => c.Id).ToList());
+                .ToLookup(c => c.ParentId!.Value, c => c.Id);
 
             // BFS całkowicie w pamięci — zero zapytań do bazy w tej pętli
             var idsToUpdate = new List<Guid>(ids.Distinct());

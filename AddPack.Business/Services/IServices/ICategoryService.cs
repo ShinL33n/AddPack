@@ -6,6 +6,7 @@ public interface ICategoryService
 {
     // Get
     Task<Category?> GetCategoryByIdAsync(Guid id);
+    Task<IEnumerable<Category>> GetCategoriesByIdAsync(List<Guid> ids);
     Task<IEnumerable<Category>> GetAllCategoriesAsync();
 
     // Create

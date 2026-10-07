@@ -48,11 +48,13 @@ public class CategoryController : Controller
             CategoryVM categoryVM = new()
             {
                 Category = new Category(),
-                CategoryList = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList()
+                CategoryList = categories
+                    .OrderBy(c => c.CreatedAt)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    }).ToList()
             };
 
             return View(categoryVM);
@@ -66,11 +68,13 @@ public class CategoryController : Controller
             CategoryVM categoryVM = new()
             {
                 Category = category,
-                CategoryList = categories.Select(c => new SelectListItem
-                {
-                    Value = c.Id.ToString(),
-                    Text = c.Name
-                }).ToList()
+                CategoryList = categories
+                    .OrderBy(c => c.CreatedAt)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    }).ToList()
             };
             return View(categoryVM);
         }
@@ -160,26 +164,54 @@ public class CategoryController : Controller
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(Guid? id)
+    [ValidateAntiForgeryToken]
+    // Make it bulk-delete friendly
+    public async Task<IActionResult> Delete(List<Guid> ids)
     {
-        if (id == Guid.Empty || id == null)
+        if (ids.Count == 0)
         {
-            return Json(new { success = false, message = "Invalid ID" });
+            return Json(new { success = false, message = "Invalid ID(s)" });
         }
 
-        var category = _categoryService.GetCategoryByIdAsync(id.Value);
+        var categories = await _categoryService.GetCategoriesByIdAsync(ids);
 
-        if (category == null)
+        if (!categories.Any())
         {
-            TempData["Error"] = $"Nie odnaleziono kategorii przeznaczonej do usunięcia.";
             return Json(new { success = false, message = "Error while deleting" });
         }
 
 
-        await _categoryService.DeleteCategoriesAsync([id.Value]);
+        int deletedCategories = await _categoryService.DeleteCategoriesAsync(ids);
 
-        TempData["Success"] = $"Kategoria została usunięta.";
+        if(deletedCategories == 0) 
+            return Json(new { success = false, message = "0 categories deleted." });
+
         return Json(new { success = true, message = "Delete Successful" });
+    }
+
+    [HttpPatch]
+    [ValidateAntiForgeryToken]
+    // Make it bulk-update friendly - checked
+    public async Task<IActionResult> Activation(List<Guid> ids, bool? value = null)
+    {
+        if (ids.Count == 0)
+        {
+            return Json(new { success = false, message = "Invalid ID(s)" });
+        }
+
+        var categories = await _categoryService.GetCategoriesByIdAsync(ids);
+
+        if (!categories.Any())
+        {
+            return Json(new { success = false, message = "Error while activating/deactivating" });
+        }
+
+        bool updateValue = value == null ? !categories.First().IsActive : value.Value;
+
+        await _categoryService.UpdateCategoriesActiveStatusAsync(ids, updateValue);
+
+        string action = updateValue ? "Activation" : "Deactivation";
+        return Json(new { success = true, message = $"{action} Successful" });
     }
 
     #endregion

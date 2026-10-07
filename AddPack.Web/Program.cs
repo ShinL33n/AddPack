@@ -12,6 +12,8 @@ builder.Services.AddDbContext<AddPack.DataAccess.Data.ApplicationDbContext>(opti
 builder.Services.AddScoped<ISeriesService, SeriesService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
+builder.Services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
